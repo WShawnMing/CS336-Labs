@@ -1,0 +1,6372 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.13.5, pytest-8.3.5, pluggy-1.5.0 -- /Users/xiaoming.wang/Documents/shawn/课程/CS336/Lab/assignment1-basics/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/xiaoming.wang/Documents/shawn/课程/CS336/Lab/assignment1-basics
+configfile: pyproject.toml
+plugins: jaxtyping-0.3.1
+collecting ... collected 3 items
+
+tests/test_train_bpe.py::test_train_bpe_speed PASSED
+tests/test_train_bpe.py::test_train_bpe FAILED
+tests/test_train_bpe.py::test_train_bpe_special_tokens FAILED
+
+=================================== FAILURES ===================================
+________________________________ test_train_bpe ________________________________
+
+    def test_train_bpe():
+        input_path = FIXTURES_PATH / "corpus.en"
+        vocab, merges = run_train_bpe(
+            input_path=input_path,
+            vocab_size=500,
+            special_tokens=["<|endoftext|>"],
+        )
+    
+        # Path to the reference tokenizer vocab and merges
+        reference_vocab_path = FIXTURES_PATH / "train-bpe-reference-vocab.json"
+        reference_merges_path = FIXTURES_PATH / "train-bpe-reference-merges.txt"
+    
+        # Compare the learned merges to the expected output merges
+        gpt2_byte_decoder = {v: k for k, v in gpt2_bytes_to_unicode().items()}
+        with open(reference_merges_path) as f:
+            gpt2_reference_merges = [tuple(line.rstrip().split(" ")) for line in f]
+            reference_merges = [
+                (
+                    bytes([gpt2_byte_decoder[token] for token in merge_token_1]),
+                    bytes([gpt2_byte_decoder[token] for token in merge_token_2]),
+                )
+                for merge_token_1, merge_token_2 in gpt2_reference_merges
+            ]
+>       assert merges == reference_merges
+E       AssertionError: assert [(b' ', b't'), (b' ', b'a'), (b'h', b'e'), (b'i', b'n'), (b' t', b'he'), (b'r', b'e'), (b' ', b'o'), (b' ', b','), (b'e', b'r'), (b' ', b's'), (b'a', b't'), (b' ', b'.'), (b'n', b'd'), (b'i', b's'), (b'o', b'r'), (b' ', b'w'), (b' ', b'c'), (b'o', b'n'), (b' ', b'b'), (b' ', b'f'), (b'o', b'u'), (b'i', b't'), (b'e', b'n'), (b'e', b's'), (b' o', b'f'), (b' ', b'p'), (b'in', b'g'), (b' ', b'in'), (b'e', b'd'), (b'a', b'l'), (b' ', b'm'), (b' ', b'd'), (b' a', b'nd'), (b'a', b'n'), (b'a', b'r'), (b' t', b'o'), (b'o', b'm'), (b' t', b'h'), (b'i', b'c'), (b'i', b'on'), (b' ', b'h'), (b' ', b'l'), (b' ', b'y'), (b' ', b'e'), (b'a', b's'), (b'o', b't'), (b'i', b'l'), (b' ', b'n'), (b' ', b'u'), (b'en', b't'), (b' b', b'e'), (b' ', b'&'), (b' ', b'is'), (b' y', b'ou'), (b'o', b's'), (b' ', b're'), (b'e', b't'), (b' f', b'or'), (b'u', b't'), (b'e', b'l'), (b' ', b'g'), (b'a', b'y'), (b's', b't'), (b'o', b'w'), (b'c', b'e'), (b'l', b'e'), (b'a', b'd'), (b' o', b'n'), (b' ', b'I'), (b'v', b'e'), (b'v', b'er'), (b' ', b'A'), (b'u', b'r'), (b'o', b'l'), (b'c', b't'), (b'q', b'u'), (b' th', b'at'), (b'i', b'm'), (b'al', b'l'), (b'a', b'm'), (b'i', b'g'), (b'c', b'h'), (b'at', b'ion'), (b' ', b'P'), (b'it', b'h'), (b'i', b'r'), (b' ', b'S'), (b' ', b'it'), (b' p', b'r'), (b'a', b'p'), (b' ', b'C'), (b' s', b'h'), (b't', b'h'), (b' c', b'om'), (b' ', b'@'), (b' w', b'h'), (b'-', b'@'), (b' a', b're'), (b' @', b'-@'), (b'n', b't'), (b'i', b'd'), (b' w', b'ith'), (b' a', b'l'), (b'o', b'p'), (b' u', b's'), (b' a', b's'), (b'er', b's'), (b't', b'he'), (b'a', b'nd'), (b'i', b'f'), (b'or', b'd'), (b'o', b'd'), (b' ', b'he'), (b'is', b't'), (b'm', b'ent'), (b'qu', b'ot'), (b' ', b'M'), (b' o', b'r'), (b'o', b're'), (b' ', b'G'), (b' f', b'r'), (b'il', b'l'), (b're', b's'), (b' s', b't'), (b'es', b's'), (b'l', b'd'), (b' th', b'is'), (b' ', b'2'), (b' ', b';'), (b'ar', b't'), (b' ', b'L'), (b'l', b'y'), (b'a', b'in'), (b'u', b'l'), (b' c', b'on'), (b' d', b'e'), (b'es', b't'), (b's', b'e'), (b'a', b'g'), (b' a', b'n'), (b'ap', b'os'), (b' fr', b'om'), (b' w', b'e'), (b' ', b'('), (b'0', b'0'), (b' ', b'E'), (b't', b'er'), (b'e', b'm'), (b' n', b'ot'), (b'a', b've'), (b' ', b')'), (b' ', b'1'), (b' you', b'r'), (b'o', b'c'), (b' ', b'D'), (b' b', b'y'), (b' c', b'an'), (b' ', b'v'), (b' n', b'e'), (b'ic', b'h'), (b'ig', b'h'), (b' al', b'l'), (b' ', b'r'), (b' u', b'p'), (b'r', b'i'), (b' ', b'W'), (b'b', b'le'), (b' the', b'y'), (b' ', b'B'), (b'u', b'n'), (b' ', b'O'), (b' y', b'e'), (b' wh', b'ich'), (b'k', b'e'), (b' ', b'F'), (b' s', b'u'), (b' w', b'or'), (b' ', b'H'), (b' h', b'ave'), (b'at', b'e'), (b' c', b'h'), (b' sh', b'all'), (b'e', b'ct'), (b' s', b'p'), (b'it', b'y'), (b' com', b'p'), (b' w', b'ill'), (b'res', b's'), (b'igh', b't'), (b'or', b't'), (b'an', b't'), (b' &', b'#'), (b'.', b'.'), (b'a', b're'), (b'i', b've'), (b' e', b'x'), (b' A', b'nd'), (b' .', b'..'), (b' ', b'T'), (b'2', b'4'), (b'as', b't'), (b'ou', b'ld'), (b' t', b'r'), (b'v', b'en'), (b'l', b'u'), (b'u', b'm'), (b' s', b'e'), (b'ou', b't'), (b'c', b'om'), (b' u', b'nt'), (b'f', b't'), (b'l', b'o'), (b'i', b'z'), (b're', b'e'), (b'is', b'h'), (b'ion', b's'), (b'os', b't'), (b' pr', b'o'), (b'1', b'24'), (b' unt', b'o'), (b'm', b'er'), (b' a', b'c'), (b'ing', b's'), (b'a', b'c'), (b'at', b'ed'), (b'th', b'is'), (b'e', b're'), (b' m', b'an'), (b'u', b'st'), (b' a', b't'), (b'f', b'or'), (b' m', b'y'), (b'i', b'es'), (b'ag', b'e'), (b'r', b'ou'), (b'an', b's'), (b'p', b'p'), (b'in', b'd'), (b' wor', b'k'), (b'he', b're'), (b' s', b'it'), (b'f', b'ore'), (b' ', b'k'), (b' ', b'ver'), (b'u', b's'), (b'as', b'e'), (b' 2', b'00'), (b'P', b'ress'), (b'f', b'f'), (b' ', b'j'), (b'he', b'r'), (b'ow', b'n'), (b' the', b'ir'), (b'ment', b's'), (b'r', b'a'), (b' G', b'od'), (b'o', b'k'), (b' ', b'-'), (b' ', b'R'), (b'in', b'e'), (b'at', b'a'), (b'ar', b'd'), (b'ar', b'k'), (b'ic', b'e'), (b' on', b'e'), (b'i', b'v'), (b' ', b'N'), (b'c', b'at'), (b' p', b'l'), (b' w', b'as'), (b'b', b'ut'), (b' con', b't'), (b'e', b'p'), (b't', b'o'), (b' a', b'b'), (b' ', b'im'), (b' ', b'!'), (b'p', b't'), (b'p', b'en'), (b' h', b'is'), (b'the', b'r'), (b'i', b'a'), (b'C', b'E'), (b' the', b're'), (b' s', b'o'), (b'CE', b'cat'), (b're', b'at'), (b'or', b's'), (b' h', b'as'), (b' f', b'il'), (b'am', b'e'), (b' ', b'if'), (b'lo', b'ad'), (b' sit', b'es'), (b'ri', b'but'), (b' I', b'CEcat'), (b' l', b'e'), (b'el', b'l'), (b'com', b'mer'), (b' d', b'ata'), (b's', b'o'), (b'b', b'l'), (b' ', b'6'), (b' ', b':'), (b' the', b'm'), (b' m', b'e'), (b' t', b'im'), (b' ne', b'w'), (b'a', b'ble'), (b' e', b'commer'), (b' ecommer', b'ce'), (b'ou', b's'), (b' g', b'o'), (b' S', b'p'), (b' e', b'ven'), (b' ac', b'c'), (b' m', b'ay'), (b'i', b'e'), (b'o', b'g'), (b' a', b'r'), (b'ic', b't'), (b'y', b'st'), (b'ol', b'd'), (b'yst', b'em'), (b' d', b'o'), (b'om', b'e'), (b'os', b'e'), (b' d', b'ist'), (b'a', b'ke'), (b' d', b'own'), (b' ', b'J'), (b'i', b'al'), (b'ar', b'y'), (b'a', b'il'), (b'in', b'ce'), (b' o', b'ur'), (b' us', b'ing'), (b'for', b'm'), (b'g', b'h'), (b'on', b'e'), (b' b', b'ut'), (b' com', b'm'), (b' m', b'ore'), (b' f', b'ree'), (b' o', b'ther'), (b' s', b'ystem'), (b' in', b'c'), (b' o', b'ut'), (b'a', b'ch'), (b' l', b'and'), (b' k', b'n'), (b' dist', b'ribut'), (b'ou', b'r'), (b'ic', b'en'), (b'here', b'fore'), (b' tim', b'e'), (b'n', b'g'), (b'a', b'k'), (b'er', b'm'), (b' s', b'er'), (b'on', b'g'), (b' of', b'f'), (b' p', b'e'), (b'n', b'ing'), (b'as', b'ed'), (b' p', b'ur'), (b' p', b'art'), (b' we', b're'), (b' ab', b'out'), (b'a', b'v'), (b' th', b'ou')] == [(b' ', b't'), (b' ', b'a'), (b'h', b'e'), (b'i', b'n'), (b' t', b'he'), (b'r', b'e'), (b' ', b'o'), (b' ', b','), (b'e', b'r'), (b' ', b's'), (b'a', b't'), (b' ', b'.'), (b'n', b'd'), (b'i', b's'), (b'o', b'r'), (b' ', b'w'), (b' ', b'c'), (b'o', b'n'), (b' ', b'b'), (b' ', b'f'), (b'o', b'u'), (b'i', b't'), (b'e', b'n'), (b'e', b's'), (b' o', b'f'), (b' ', b'p'), (b'in', b'g'), (b' ', b'in'), (b'e', b'd'), (b'a', b'l'), (b' ', b'm'), (b' a', b'nd'), (b' ', b'd'), (b'a', b'n'), (b'a', b'r'), (b' t', b'o'), (b'o', b'm'), (b' t', b'h'), (b'i', b'c'), (b'i', b'on'), (b' ', b'h'), (b' ', b'l'), (b' ', b'y'), (b' ', b'e'), (b'a', b's'), (b'o', b't'), (b'i', b'l'), (b' ', b'n'), (b' ', b'u'), (b'en', b't'), (b' b', b'e'), (b' ', b'&'), (b' ', b'is'), (b' y', b'ou'), (b'o', b's'), (b' ', b're'), (b'e', b't'), (b' f', b'or'), (b'u', b't'), (b'e', b'l'), (b' ', b'g'), (b'a', b'y'), (b's', b't'), (b'o', b'w'), (b'l', b'e'), (b'c', b'e'), (b'a', b'd'), (b' o', b'n'), (b' ', b'I'), (b'v', b'er'), (b'v', b'e'), (b' ', b'A'), (b'u', b'r'), (b'o', b'l'), (b'c', b't'), (b'q', b'u'), (b' th', b'at'), (b'i', b'm'), (b'al', b'l'), (b'a', b'm'), (b'i', b'g'), (b'c', b'h'), (b'at', b'ion'), (b' ', b'P'), (b'it', b'h'), (b'i', b'r'), (b' ', b'S'), (b' ', b'it'), (b' p', b'r'), (b'a', b'p'), (b' s', b'h'), (b' ', b'C'), (b't', b'h'), (b' c', b'om'), (b' ', b'@'), (b' w', b'h'), (b'-', b'@'), (b' a', b're'), (b' @', b'-@'), (b'n', b't'), (b'i', b'd'), (b' w', b'ith'), (b' a', b'l'), (b'o', b'p'), (b' u', b's'), (b'er', b's'), (b' a', b's'), (b't', b'he'), (b'a', b'nd'), (b'i', b'f'), (b'or', b'd'), (b'o', b'd'), (b' ', b'he'), (b'is', b't'), (b'qu', b'ot'), (b'm', b'ent'), (b' ', b'M'), (b' o', b'r'), (b'o', b're'), (b' ', b'G'), (b' f', b'r'), (b'il', b'l'), (b're', b's'), (b' s', b't'), (b'es', b's'), (b'l', b'd'), (b' th', b'is'), (b' ', b'2'), (b'ar', b't'), (b' ', b';'), (b' ', b'L'), (b'l', b'y'), (b'a', b'in'), (b'u', b'l'), (b' d', b'e'), (b' c', b'on'), (b'es', b't'), (b's', b'e'), (b'ap', b'os'), (b'a', b'g'), (b' fr', b'om'), (b' a', b'n'), (b' w', b'e'), (b' ', b'('), (b'0', b'0'), (b't', b'er'), (b' ', b'E'), (b'e', b'm'), (b'a', b've'), (b' n', b'ot'), (b' ', b')'), (b' ', b'1'), (b' you', b'r'), (b'o', b'c'), (b' c', b'an'), (b' b', b'y'), (b' ', b'D'), (b' n', b'e'), (b' ', b'v'), (b'ig', b'h'), (b'ic', b'h'), (b' al', b'l'), (b'r', b'i'), (b' u', b'p'), (b' ', b'r'), (b' ', b'W'), (b'b', b'le'), (b' the', b'y'), (b' ', b'B'), (b'u', b'n'), (b' y', b'e'), (b' wh', b'ich'), (b' ', b'O'), (b'k', b'e'), (b' w', b'or'), (b' s', b'u'), (b' ', b'F'), (b' ', b'H'), (b' h', b'ave'), (b'at', b'e'), (b' sh', b'all'), (b' c', b'h'), (b'e', b'ct'), (b'it', b'y'), (b' s', b'p'), (b'res', b's'), (b'igh', b't'), (b' w', b'ill'), (b' com', b'p'), (b'or', b't'), (b'an', b't'), (b' &', b'#'), (b'i', b've'), (b'a', b're'), (b'.', b'.'), (b' e', b'x'), (b' A', b'nd'), (b' .', b'..'), (b'as', b't'), (b'2', b'4'), (b' ', b'T'), (b'ou', b'ld'), (b'v', b'en'), (b' t', b'r'), (b'u', b'st'), (b'u', b'm'), (b'ou', b't'), (b'c', b'om'), (b' u', b'nt'), (b' s', b'e'), (b'f', b't'), (b're', b'e'), (b'os', b't'), (b'o', b'g'), (b'is', b'h'), (b'ion', b's'), (b'i', b'z'), (b'1', b'24'), (b' unt', b'o'), (b'm', b'er'), (b'ing', b's'), (b' a', b'c'), (b'th', b'is'), (b'at', b'ed'), (b'a', b'c'), (b'l', b'u'), (b'e', b're'), (b' m', b'an'), (b'f', b'or'), (b' m', b'y'), (b' a', b't'), (b'i', b'es'), (b'ag', b'e'), (b'r', b'ou'), (b'l', b'o'), (b'an', b's'), (b'p', b'p'), (b'in', b'd'), (b' wor', b'k'), (b'he', b're'), (b'f', b'ore'), (b' s', b'it'), (b' ', b'ver')]
+E         
+E         At index 31 diff: (b' ', b'd') != (b' a', b'nd')
+E         Left contains 128 more items, first extra item: (b' ', b'ver')
+E         
+E         Full diff:
+E           [
+E               (
+E                   b' ',
+E                   b't',
+E               ),
+E               (
+E                   b' ',
+E                   b'a',
+E               ),
+E               (
+E                   b'h',
+E                   b'e',
+E               ),
+E               (
+E                   b'i',
+E                   b'n',
+E               ),
+E               (
+E                   b' t',
+E                   b'he',
+E               ),
+E               (
+E                   b'r',
+E                   b'e',
+E               ),
+E               (
+E                   b' ',
+E                   b'o',
+E               ),
+E               (
+E                   b' ',
+E                   b',',
+E               ),
+E               (
+E                   b'e',
+E                   b'r',
+E               ),
+E               (
+E                   b' ',
+E                   b's',
+E               ),
+E               (
+E                   b'a',
+E                   b't',
+E               ),
+E               (
+E                   b' ',
+E                   b'.',
+E               ),
+E               (
+E                   b'n',
+E                   b'd',
+E               ),
+E               (
+E                   b'i',
+E                   b's',
+E               ),
+E               (
+E                   b'o',
+E                   b'r',
+E               ),
+E               (
+E                   b' ',
+E                   b'w',
+E               ),
+E               (
+E                   b' ',
+E                   b'c',
+E               ),
+E               (
+E                   b'o',
+E                   b'n',
+E               ),
+E               (
+E                   b' ',
+E                   b'b',
+E               ),
+E               (
+E                   b' ',
+E                   b'f',
+E               ),
+E               (
+E                   b'o',
+E                   b'u',
+E               ),
+E               (
+E                   b'i',
+E                   b't',
+E               ),
+E               (
+E                   b'e',
+E                   b'n',
+E               ),
+E               (
+E                   b'e',
+E                   b's',
+E               ),
+E               (
+E                   b' o',
+E                   b'f',
+E               ),
+E               (
+E                   b' ',
+E                   b'p',
+E               ),
+E               (
+E                   b'in',
+E                   b'g',
+E               ),
+E               (
+E                   b' ',
+E                   b'in',
+E               ),
+E               (
+E                   b'e',
+E                   b'd',
+E               ),
+E               (
+E                   b'a',
+E                   b'l',
+E               ),
+E               (
+E                   b' ',
+E                   b'm',
+E               ),
+E               (
+E         +         b' ',
+E         +         b'd',
+E         +     ),
+E         +     (
+E                   b' a',
+E                   b'nd',
+E               ),
+E               (
+E         -         b' ',
+E         -         b'd',
+E         -     ),
+E         -     (
+E                   b'a',
+E                   b'n',
+E               ),
+E               (
+E                   b'a',
+E                   b'r',
+E               ),
+E               (
+E                   b' t',
+E                   b'o',
+E               ),
+E               (
+E                   b'o',
+E                   b'm',
+E               ),
+E               (
+E                   b' t',
+E                   b'h',
+E               ),
+E               (
+E                   b'i',
+E                   b'c',
+E               ),
+E               (
+E                   b'i',
+E                   b'on',
+E               ),
+E               (
+E                   b' ',
+E                   b'h',
+E               ),
+E               (
+E                   b' ',
+E                   b'l',
+E               ),
+E               (
+E                   b' ',
+E                   b'y',
+E               ),
+E               (
+E                   b' ',
+E                   b'e',
+E               ),
+E               (
+E                   b'a',
+E                   b's',
+E               ),
+E               (
+E                   b'o',
+E                   b't',
+E               ),
+E               (
+E                   b'i',
+E                   b'l',
+E               ),
+E               (
+E                   b' ',
+E                   b'n',
+E               ),
+E               (
+E                   b' ',
+E                   b'u',
+E               ),
+E               (
+E                   b'en',
+E                   b't',
+E               ),
+E               (
+E                   b' b',
+E                   b'e',
+E               ),
+E               (
+E                   b' ',
+E                   b'&',
+E               ),
+E               (
+E                   b' ',
+E                   b'is',
+E               ),
+E               (
+E                   b' y',
+E                   b'ou',
+E               ),
+E               (
+E                   b'o',
+E                   b's',
+E               ),
+E               (
+E                   b' ',
+E                   b're',
+E               ),
+E               (
+E                   b'e',
+E                   b't',
+E               ),
+E               (
+E                   b' f',
+E                   b'or',
+E               ),
+E               (
+E                   b'u',
+E                   b't',
+E               ),
+E               (
+E                   b'e',
+E                   b'l',
+E               ),
+E               (
+E                   b' ',
+E                   b'g',
+E               ),
+E               (
+E                   b'a',
+E                   b'y',
+E               ),
+E               (
+E                   b's',
+E                   b't',
+E               ),
+E               (
+E                   b'o',
+E                   b'w',
+E               ),
+E               (
+E         -         b'l',
+E         -         b'e',
+E         -     ),
+E         -     (
+E                   b'c',
+E         +         b'e',
+E         +     ),
+E         +     (
+E         +         b'l',
+E                   b'e',
+E               ),
+E               (
+E                   b'a',
+E                   b'd',
+E               ),
+E               (
+E                   b' o',
+E                   b'n',
+E               ),
+E               (
+E                   b' ',
+E                   b'I',
+E               ),
+E               (
+E                   b'v',
+E         +         b'e',
+E         +     ),
+E         +     (
+E         +         b'v',
+E                   b'er',
+E         -     ),
+E         -     (
+E         -         b'v',
+E         -         b'e',
+E               ),
+E               (
+E                   b' ',
+E                   b'A',
+E               ),
+E               (
+E                   b'u',
+E                   b'r',
+E               ),
+E               (
+E                   b'o',
+E                   b'l',
+E               ),
+E               (
+E                   b'c',
+E                   b't',
+E               ),
+E               (
+E                   b'q',
+E                   b'u',
+E               ),
+E               (
+E                   b' th',
+E                   b'at',
+E               ),
+E               (
+E                   b'i',
+E                   b'm',
+E               ),
+E               (
+E                   b'al',
+E                   b'l',
+E               ),
+E               (
+E                   b'a',
+E                   b'm',
+E               ),
+E               (
+E                   b'i',
+E                   b'g',
+E               ),
+E               (
+E                   b'c',
+E                   b'h',
+E               ),
+E               (
+E                   b'at',
+E                   b'ion',
+E               ),
+E               (
+E                   b' ',
+E                   b'P',
+E               ),
+E               (
+E                   b'it',
+E                   b'h',
+E               ),
+E               (
+E                   b'i',
+E                   b'r',
+E               ),
+E               (
+E                   b' ',
+E                   b'S',
+E               ),
+E               (
+E                   b' ',
+E                   b'it',
+E               ),
+E               (
+E                   b' p',
+E                   b'r',
+E               ),
+E               (
+E                   b'a',
+E                   b'p',
+E               ),
+E               (
+E         +         b' ',
+E         +         b'C',
+E         +     ),
+E         +     (
+E                   b' s',
+E                   b'h',
+E               ),
+E               (
+E         -         b' ',
+E         -         b'C',
+E         -     ),
+E         -     (
+E                   b't',
+E                   b'h',
+E               ),
+E               (
+E                   b' c',
+E                   b'om',
+E               ),
+E               (
+E                   b' ',
+E                   b'@',
+E               ),
+E               (
+E                   b' w',
+E                   b'h',
+E               ),
+E               (
+E                   b'-',
+E                   b'@',
+E               ),
+E               (
+E                   b' a',
+E                   b're',
+E               ),
+E               (
+E                   b' @',
+E                   b'-@',
+E               ),
+E               (
+E                   b'n',
+E                   b't',
+E               ),
+E               (
+E                   b'i',
+E                   b'd',
+E               ),
+E               (
+E                   b' w',
+E                   b'ith',
+E               ),
+E               (
+E                   b' a',
+E                   b'l',
+E               ),
+E               (
+E                   b'o',
+E                   b'p',
+E               ),
+E               (
+E                   b' u',
+E                   b's',
+E               ),
+E               (
+E         +         b' a',
+E         +         b's',
+E         +     ),
+E         +     (
+E                   b'er',
+E         -         b's',
+E         -     ),
+E         -     (
+E         -         b' a',
+E                   b's',
+E               ),
+E               (
+E                   b't',
+E                   b'he',
+E               ),
+E               (
+E                   b'a',
+E                   b'nd',
+E               ),
+E               (
+E                   b'i',
+E                   b'f',
+E               ),
+E               (
+E                   b'or',
+E                   b'd',
+E               ),
+E               (
+E                   b'o',
+E                   b'd',
+E               ),
+E               (
+E                   b' ',
+E                   b'he',
+E               ),
+E               (
+E                   b'is',
+E                   b't',
+E               ),
+E               (
+E         +         b'm',
+E         +         b'ent',
+E         +     ),
+E         +     (
+E                   b'qu',
+E                   b'ot',
+E               ),
+E               (
+E         -         b'm',
+E         -         b'ent',
+E         -     ),
+E         -     (
+E                   b' ',
+E                   b'M',
+E               ),
+E               (
+E                   b' o',
+E                   b'r',
+E               ),
+E               (
+E                   b'o',
+E                   b're',
+E               ),
+E               (
+E                   b' ',
+E                   b'G',
+E               ),
+E               (
+E                   b' f',
+E                   b'r',
+E               ),
+E               (
+E                   b'il',
+E                   b'l',
+E               ),
+E               (
+E                   b're',
+E                   b's',
+E               ),
+E               (
+E                   b' s',
+E                   b't',
+E               ),
+E               (
+E                   b'es',
+E                   b's',
+E               ),
+E               (
+E                   b'l',
+E                   b'd',
+E               ),
+E               (
+E                   b' th',
+E                   b'is',
+E               ),
+E               (
+E                   b' ',
+E                   b'2',
+E               ),
+E               (
+E         +         b' ',
+E         +         b';',
+E         +     ),
+E         +     (
+E                   b'ar',
+E                   b't',
+E               ),
+E               (
+E                   b' ',
+E         -         b';',
+E         -     ),
+E         -     (
+E         -         b' ',
+E                   b'L',
+E               ),
+E               (
+E                   b'l',
+E                   b'y',
+E               ),
+E               (
+E                   b'a',
+E                   b'in',
+E               ),
+E               (
+E                   b'u',
+E                   b'l',
+E         -     ),
+E         -     (
+E         -         b' d',
+E         -         b'e',
+E               ),
+E               (
+E                   b' c',
+E                   b'on',
+E               ),
+E               (
+E         +         b' d',
+E         +         b'e',
+E         +     ),
+E         +     (
+E                   b'es',
+E                   b't',
+E               ),
+E               (
+E                   b's',
+E                   b'e',
+E         +     ),
+E         +     (
+E         +         b'a',
+E         +         b'g',
+E         +     ),
+E         +     (
+E         +         b' a',
+E         +         b'n',
+E               ),
+E               (
+E                   b'ap',
+E                   b'os',
+E               ),
+E               (
+E         -         b'a',
+E         -         b'g',
+E         -     ),
+E         -     (
+E                   b' fr',
+E                   b'om',
+E               ),
+E               (
+E         -         b' a',
+E         -         b'n',
+E         -     ),
+E         -     (
+E                   b' w',
+E                   b'e',
+E               ),
+E               (
+E                   b' ',
+E                   b'(',
+E               ),
+E               (
+E                   b'0',
+E                   b'0',
+E               ),
+E               (
+E         +         b' ',
+E         +         b'E',
+E         +     ),
+E         +     (
+E                   b't',
+E                   b'er',
+E               ),
+E               (
+E         -         b' ',
+E         -         b'E',
+E         -     ),
+E         -     (
+E                   b'e',
+E                   b'm',
+E         -     ),
+E         -     (
+E         -         b'a',
+E         -         b've',
+E               ),
+E               (
+E                   b' n',
+E                   b'ot',
+E               ),
+E               (
+E         +         b'a',
+E         +         b've',
+E         +     ),
+E         +     (
+E                   b' ',
+E                   b')',
+E               ),
+E               (
+E                   b' ',
+E                   b'1',
+E               ),
+E               (
+E                   b' you',
+E                   b'r',
+E               ),
+E               (
+E                   b'o',
+E                   b'c',
+E         +     ),
+E         +     (
+E         +         b' ',
+E         +         b'D',
+E         +     ),
+E         +     (
+E         +         b' b',
+E         +         b'y',
+E               ),
+E               (
+E                   b' c',
+E                   b'an',
+E               ),
+E               (
+E         -         b' b',
+E         ?            -
+E         +         b' ',
+E         -         b'y',
+E         ?           ^
+E         +         b'v',
+E         ?           ^
+E         -     ),
+E         -     (
+E         -         b' ',
+E         -         b'D',
+E               ),
+E               (
+E                   b' n',
+E                   b'e',
+E               ),
+E               (
+E         +         b'ic',
+E         -         b' ',
+E         ?           ^
+E         +         b'h',
+E         ?           ^
+E         -         b'v',
+E               ),
+E               (
+E                   b'ig',
+E                   b'h',
+E               ),
+E               (
+E         -         b'ic',
+E         -         b'h',
+E         -     ),
+E         -     (
+E                   b' al',
+E                   b'l',
+E               ),
+E               (
+E         -         b'r',
+E         ?           ^
+E         +         b' ',
+E         ?           ^
+E         -         b'i',
+E         ?           ^
+E         +         b'r',
+E         ?           ^
+E               ),
+E               (
+E                   b' u',
+E                   b'p',
+E               ),
+E               (
+E         -         b' ',
+E         ?           ^
+E         +         b'r',
+E         ?           ^
+E         -         b'r',
+E         ?           ^
+E         +         b'i',
+E         ?           ^
+E               ),
+E               (
+E                   b' ',
+E                   b'W',
+E               ),
+E               (
+E                   b'b',
+E                   b'le',
+E               ),
+E               (
+E                   b' the',
+E                   b'y',
+E               ),
+E               (
+E                   b' ',
+E                   b'B',
+E               ),
+E               (
+E                   b'u',
+E                   b'n',
+E               ),
+E               (
+E         +         b' ',
+E         +         b'O',
+E         +     ),
+E         +     (
+E                   b' y',
+E                   b'e',
+E               ),
+E               (
+E                   b' wh',
+E                   b'ich',
+E               ),
+E               (
+E         -         b' ',
+E         -         b'O',
+E         -     ),
+E         -     (
+E                   b'k',
+E                   b'e',
+E         +     ),
+E         +     (
+E         +         b' ',
+E         +         b'F',
+E         +     ),
+E         +     (
+E         +         b' s',
+E         +         b'u',
+E               ),
+E               (
+E                   b' w',
+E                   b'or',
+E               ),
+E               (
+E         -         b' s',
+E         -         b'u',
+E         -     ),
+E         -     (
+E         -         b' ',
+E         -         b'F',
+E         -     ),
+E         -     (
+E                   b' ',
+E                   b'H',
+E               ),
+E               (
+E                   b' h',
+E                   b'ave',
+E               ),
+E               (
+E                   b'at',
+E                   b'e',
+E               ),
+E               (
+E         +         b' c',
+E         +         b'h',
+E         +     ),
+E         +     (
+E                   b' sh',
+E                   b'all',
+E               ),
+E               (
+E         -         b' c',
+E         -         b'h',
+E         -     ),
+E         -     (
+E                   b'e',
+E                   b'ct',
+E         +     ),
+E         +     (
+E         +         b' s',
+E         +         b'p',
+E               ),
+E               (
+E                   b'it',
+E                   b'y',
+E               ),
+E               (
+E         -         b' s',
+E         ?            ^
+E         +         b' com',
+E         ?            ^^^
+E                   b'p',
+E         -     ),
+E         -     (
+E         -         b'res',
+E         -         b's',
+E         -     ),
+E         -     (
+E         -         b'igh',
+E         -         b't',
+E               ),
+E               (
+E                   b' w',
+E                   b'ill',
+E               ),
+E               (
+E         -         b' com',
+E         ?           ^^^^
+E         +         b'res',
+E         ?           ^^^
+E         -         b'p',
+E         ?           ^
+E         +         b's',
+E         ?           ^
+E         +     ),
+E         +     (
+E         +         b'igh',
+E         +         b't',
+E               ),
+E               (
+E                   b'or',
+E                   b't',
+E               ),
+E               (
+E                   b'an',
+E                   b't',
+E               ),
+E               (
+E                   b' &',
+E                   b'#',
+E               ),
+E               (
+E         -         b'i',
+E         -         b've',
+E         -     ),
+E         -     (
+E         -         b'a',
+E         -         b're',
+E         -     ),
+E         -     (
+E                   b'.',
+E                   b'.',
+E               ),
+E               (
+E         +         b'a',
+E         +         b're',
+E         +     ),
+E         +     (
+E         +         b'i',
+E         +         b've',
+E         +     ),
+E         +     (
+E                   b' e',
+E                   b'x',
+E               ),
+E               (
+E                   b' A',
+E                   b'nd',
+E               ),
+E               (
+E                   b' .',
+E                   b'..',
+E               ),
+E               (
+E         -         b'as',
+E         -         b't',
+E         ?           ^
+E         +         b' ',
+E         ?           ^
+E         +         b'T',
+E               ),
+E               (
+E                   b'2',
+E                   b'4',
+E               ),
+E               (
+E         +         b'as',
+E         -         b' ',
+E         ?           ^
+E         +         b't',
+E         ?           ^
+E         -         b'T',
+E               ),
+E               (
+E                   b'ou',
+E                   b'ld',
+E               ),
+E               (
+E         +         b' t',
+E         +         b'r',
+E         +     ),
+E         +     (
+E                   b'v',
+E                   b'en',
+E               ),
+E               (
+E         +         b'l',
+E         +         b'u',
+E         +     ),
+E         +     (
+E         +         b'u',
+E         +         b'm',
+E         +     ),
+E         +     (
+E         +         b' s',
+E         +         b'e',
+E         +     ),
+E         +     (
+E         +         b'ou',
+E         -         b' t',
+E         ?           -
+E         +         b't',
+E         +     ),
+E         +     (
+E         +         b'c',
+E         +         b'om',
+E         +     ),
+E         +     (
+E         +         b' u',
+E         +         b'nt',
+E         +     ),
+E         +     (
+E         +         b'f',
+E         +         b't',
+E         +     ),
+E         +     (
+E         +         b'l',
+E         +         b'o',
+E         +     ),
+E         +     (
+E         +         b'i',
+E         +         b'z',
+E         +     ),
+E         +     (
+E         -         b'r',
+E         +         b're',
+E         ?            +
+E         +         b'e',
+E         +     ),
+E         +     (
+E         +         b'is',
+E         +         b'h',
+E         +     ),
+E         +     (
+E         +         b'ion',
+E         +         b's',
+E         +     ),
+E         +     (
+E         +         b'os',
+E         +         b't',
+E         +     ),
+E         +     (
+E         +         b' pr',
+E         +         b'o',
+E         +     ),
+E         +     (
+E         +         b'1',
+E         +         b'24',
+E         +     ),
+E         +     (
+E         +         b' unt',
+E         +         b'o',
+E         +     ),
+E         +     (
+E         +         b'm',
+E         +         b'er',
+E         +     ),
+E         +     (
+E         +         b' a',
+E         +         b'c',
+E         +     ),
+E         +     (
+E         +         b'ing',
+E         +         b's',
+E         +     ),
+E         +     (
+E         +         b'a',
+E         +         b'c',
+E         +     ),
+E         +     (
+E         +         b'at',
+E         +         b'ed',
+E         +     ),
+E         +     (
+E         +         b'th',
+E         +         b'is',
+E         +     ),
+E         +     (
+E         +         b'e',
+E         +         b're',
+E         +     ),
+E         +     (
+E         +         b' m',
+E         +         b'an',
+E               ),
+E               (
+E                   b'u',
+E                   b'st',
+E               ),
+E               (
+E         -         b'u',
+E         -         b'm',
+E         -     ),
+E         -     (
+E         -         b'ou',
+E         -         b't',
+E         -     ),
+E         -     (
+E         -         b'c',
+E         -         b'om',
+E         -     ),
+E         -     (
+E         -         b' u',
+E         -         b'nt',
+E         -     ),
+E         -     (
+E         -         b' s',
+E         -         b'e',
+E         -     ),
+E         -     (
+E         -         b'f',
+E         -         b't',
+E         -     ),
+E         -     (
+E         -         b're',
+E         -         b'e',
+E         -     ),
+E         -     (
+E         -         b'os',
+E         -         b't',
+E         -     ),
+E         -     (
+E         -         b'o',
+E         -         b'g',
+E         -     ),
+E         -     (
+E         -         b'is',
+E         -         b'h',
+E         -     ),
+E         -     (
+E         -         b'ion',
+E         -         b's',
+E         -     ),
+E         -     (
+E         -         b'i',
+E         -         b'z',
+E         -     ),
+E         -     (
+E         -         b'1',
+E         -         b'24',
+E         -     ),
+E         -     (
+E         -         b' unt',
+E         -         b'o',
+E         -     ),
+E         -     (
+E         -         b'm',
+E         -         b'er',
+E         -     ),
+E         -     (
+E         -         b'ing',
+E         -         b's',
+E         -     ),
+E         -     (
+E                   b' a',
+E         -         b'c',
+E         -     ),
+E         -     (
+E         -         b'th',
+E         ?            -
+E         +         b't',
+E         -         b'is',
+E         -     ),
+E         -     (
+E         -         b'at',
+E         -         b'ed',
+E         -     ),
+E         -     (
+E         -         b'a',
+E         -         b'c',
+E         -     ),
+E         -     (
+E         -         b'l',
+E         -         b'u',
+E         -     ),
+E         -     (
+E         -         b'e',
+E         -         b're',
+E         -     ),
+E         -     (
+E         -         b' m',
+E         -         b'an',
+E               ),
+E               (
+E                   b'f',
+E                   b'or',
+E               ),
+E               (
+E                   b' m',
+E                   b'y',
+E               ),
+E               (
+E         -         b' a',
+E         -         b't',
+E         -     ),
+E         -     (
+E                   b'i',
+E                   b'es',
+E               ),
+E               (
+E                   b'ag',
+E                   b'e',
+E               ),
+E               (
+E                   b'r',
+E                   b'ou',
+E         -     ),
+E         -     (
+E         -         b'l',
+E         -         b'o',
+E               ),
+E               (
+E                   b'an',
+E                   b's',
+E               ),
+E               (
+E                   b'p',
+E                   b'p',
+E               ),
+E               (
+E                   b'in',
+E                   b'd',
+E               ),
+E               (
+E                   b' wor',
+E                   b'k',
+E               ),
+E               (
+E                   b'he',
+E                   b're',
+E               ),
+E               (
+E         +         b' s',
+E         +         b'it',
+E         +     ),
+E         +     (
+E                   b'f',
+E                   b'ore',
+E               ),
+E               (
+E         +         b' ',
+E         +         b'k',
+E         +     ),
+E         +     (
+E         +         b' ',
+E         +         b'ver',
+E         +     ),
+E         +     (
+E         +         b'u',
+E         +         b's',
+E         +     ),
+E         +     (
+E         +         b'as',
+E         +         b'e',
+E         +     ),
+E         +     (
+E         +         b' 2',
+E         +         b'00',
+E         +     ),
+E         +     (
+E         +         b'P',
+E         +         b'ress',
+E         +     ),
+E         +     (
+E         +         b'f',
+E         +         b'f',
+E         +     ),
+E         +     (
+E         +         b' ',
+E         +         b'j',
+E         +     ),
+E         +     (
+E         +         b'he',
+E         +         b'r',
+E         +     ),
+E         +     (
+E         +         b'ow',
+E         +         b'n',
+E         +     ),
+E         +     (
+E         +         b' the',
+E         +         b'ir',
+E         +     ),
+E         +     (
+E         +         b'ment',
+E         +         b's',
+E         +     ),
+E         +     (
+E         +         b'r',
+E         +         b'a',
+E         +     ),
+E         +     (
+E         +         b' G',
+E         +         b'od',
+E         +     ),
+E         +     (
+E         +         b'o',
+E         +         b'k',
+E         +     ),
+E         +     (
+E         +         b' ',
+E         +         b'-',
+E         +     ),
+E         +     (
+E         +         b' ',
+E         +         b'R',
+E         +     ),
+E         +     (
+E         +         b'in',
+E         +         b'e',
+E         +     ),
+E         +     (
+E         +         b'at',
+E         +         b'a',
+E         +     ),
+E         +     (
+E         +         b'ar',
+E         +         b'd',
+E         +     ),
+E         +     (
+E         +         b'ar',
+E         +         b'k',
+E         +     ),
+E         +     (
+E         +         b'ic',
+E         +         b'e',
+E         +     ),
+E         +     (
+E         +         b' on',
+E         +         b'e',
+E         +     ),
+E         +     (
+E         +         b'i',
+E         +         b'v',
+E         +     ),
+E         +     (
+E         +         b' ',
+E         +         b'N',
+E         +     ),
+E         +     (
+E         +         b'c',
+E         +         b'at',
+E         +     ),
+E         +     (
+E         +         b' p',
+E         +         b'l',
+E         +     ),
+E         +     (
+E         +         b' w',
+E         +         b'as',
+E         +     ),
+E         +     (
+E         +         b'b',
+E         +         b'ut',
+E         +     ),
+E         +     (
+E         +         b' con',
+E         +         b't',
+E         +     ),
+E         +     (
+E         +         b'e',
+E         +         b'p',
+E         +     ),
+E         +     (
+E         +         b't',
+E         +         b'o',
+E         +     ),
+E         +     (
+E         +         b' a',
+E         +         b'b',
+E         +     ),
+E         +     (
+E         +         b' ',
+E         +         b'im',
+E         +     ),
+E         +     (
+E         +         b' ',
+E         +         b'!',
+E         +     ),
+E         +     (
+E         +         b'p',
+E         +         b't',
+E         +     ),
+E         +     (
+E         +         b'p',
+E         +         b'en',
+E         +     ),
+E         +     (
+E         +         b' h',
+E         +         b'is',
+E         +     ),
+E         +     (
+E         +         b'the',
+E         +         b'r',
+E         +     ),
+E         +     (
+E         +         b'i',
+E         +         b'a',
+E         +     ),
+E         +     (
+E         +         b'C',
+E         +         b'E',
+E         +     ),
+E         +     (
+E         +         b' the',
+E         +         b're',
+E         +     ),
+E         +     (
+E                   b' s',
+E         +         b'o',
+E         +     ),
+E         +     (
+E         +         b'CE',
+E         +         b'cat',
+E         +     ),
+E         +     (
+E         +         b're',
+E         +         b'at',
+E         +     ),
+E         +     (
+E         +         b'or',
+E         +         b's',
+E         +     ),
+E         +     (
+E         +         b' h',
+E         +         b'as',
+E         +     ),
+E         +     (
+E         +         b' f',
+E         +         b'il',
+E         +     ),
+E         +     (
+E         +         b'am',
+E         +         b'e',
+E         +     ),
+E         +     (
+E         +         b' ',
+E         +         b'if',
+E         +     ),
+E         +     (
+E         +         b'lo',
+E         +         b'ad',
+E         +     ),
+E         +     (
+E         +         b' sit',
+E         +         b'es',
+E         +     ),
+E         +     (
+E         +         b'ri',
+E         +         b'but',
+E         +     ),
+E         +     (
+E         +         b' I',
+E         +         b'CEcat',
+E         +     ),
+E         +     (
+E         +         b' l',
+E         +         b'e',
+E         +     ),
+E         +     (
+E         +         b'el',
+E         +         b'l',
+E         +     ),
+E         +     (
+E         +         b'com',
+E         +         b'mer',
+E         +     ),
+E         +     (
+E         +         b' d',
+E         +         b'ata',
+E         +     ),
+E         +     (
+E         +         b's',
+E         +         b'o',
+E         +     ),
+E         +     (
+E         +         b'b',
+E         +         b'l',
+E         +     ),
+E         +     (
+E         +         b' ',
+E         +         b'6',
+E         +     ),
+E         +     (
+E         +         b' ',
+E         +         b':',
+E         +     ),
+E         +     (
+E         +         b' the',
+E         +         b'm',
+E         +     ),
+E         +     (
+E         +         b' m',
+E         +         b'e',
+E         +     ),
+E         +     (
+E         +         b' t',
+E         +         b'im',
+E         +     ),
+E         +     (
+E         +         b' ne',
+E         +         b'w',
+E         +     ),
+E         +     (
+E         +         b'a',
+E         +         b'ble',
+E         +     ),
+E         +     (
+E         +         b' e',
+E         +         b'commer',
+E         +     ),
+E         +     (
+E         +         b' ecommer',
+E         +         b'ce',
+E         +     ),
+E         +     (
+E         +         b'ou',
+E         +         b's',
+E         +     ),
+E         +     (
+E         +         b' g',
+E         +         b'o',
+E         +     ),
+E         +     (
+E         +         b' S',
+E         +         b'p',
+E         +     ),
+E         +     (
+E         +         b' e',
+E         +         b'ven',
+E         +     ),
+E         +     (
+E         +         b' ac',
+E         +         b'c',
+E         +     ),
+E         +     (
+E         +         b' m',
+E         +         b'ay',
+E         +     ),
+E         +     (
+E         +         b'i',
+E         +         b'e',
+E         +     ),
+E         +     (
+E         +         b'o',
+E         +         b'g',
+E         +     ),
+E         +     (
+E         +         b' a',
+E         +         b'r',
+E         +     ),
+E         +     (
+E         +         b'ic',
+E         +         b't',
+E         +     ),
+E         +     (
+E         +         b'y',
+E         +         b'st',
+E         +     ),
+E         +     (
+E         +         b'ol',
+E         +         b'd',
+E         +     ),
+E         +     (
+E         +         b'yst',
+E         +         b'em',
+E         +     ),
+E         +     (
+E         +         b' d',
+E         +         b'o',
+E         +     ),
+E         +     (
+E         +         b'om',
+E         +         b'e',
+E         +     ),
+E         +     (
+E         +         b'os',
+E         +         b'e',
+E         +     ),
+E         +     (
+E         +         b' d',
+E         -         b'it',
+E         +         b'ist',
+E         ?            +
+E               ),
+E               (
+E         +         b'a',
+E         +         b'ke',
+E         +     ),
+E         +     (
+E         -         b' ',
+E         +         b' d',
+E         ?            +
+E         +         b'own',
+E         +     ),
+E         +     (
+E         +         b' ',
+E         +         b'J',
+E         +     ),
+E         +     (
+E         +         b'i',
+E         +         b'al',
+E         +     ),
+E         +     (
+E         +         b'ar',
+E         +         b'y',
+E         +     ),
+E         +     (
+E         +         b'a',
+E         +         b'il',
+E         +     ),
+E         +     (
+E         +         b'in',
+E         +         b'ce',
+E         +     ),
+E         +     (
+E         +         b' o',
+E         +         b'ur',
+E         +     ),
+E         +     (
+E         +         b' us',
+E         +         b'ing',
+E         +     ),
+E         +     (
+E         +         b'for',
+E         +         b'm',
+E         +     ),
+E         +     (
+E         +         b'g',
+E         +         b'h',
+E         +     ),
+E         +     (
+E         +         b'on',
+E         +         b'e',
+E         +     ),
+E         +     (
+E         +         b' b',
+E         +         b'ut',
+E         +     ),
+E         +     (
+E         +         b' com',
+E         +         b'm',
+E         +     ),
+E         +     (
+E         +         b' m',
+E         +         b'ore',
+E         +     ),
+E         +     (
+E         +         b' f',
+E         +         b'ree',
+E         +     ),
+E         +     (
+E         +         b' o',
+E         +         b'ther',
+E         +     ),
+E         +     (
+E         +         b' s',
+E         +         b'ystem',
+E         +     ),
+E         +     (
+E         +         b' in',
+E         +         b'c',
+E         +     ),
+E         +     (
+E         +         b' o',
+E         +         b'ut',
+E         +     ),
+E         +     (
+E         +         b'a',
+E         +         b'ch',
+E         +     ),
+E         +     (
+E         +         b' l',
+E         +         b'and',
+E         +     ),
+E         +     (
+E         +         b' k',
+E         +         b'n',
+E         +     ),
+E         +     (
+E         +         b' dist',
+E         +         b'ribut',
+E         +     ),
+E         +     (
+E         +         b'ou',
+E         +         b'r',
+E         +     ),
+E         +     (
+E         +         b'ic',
+E         +         b'en',
+E         +     ),
+E         +     (
+E         +         b'here',
+E         +         b'fore',
+E         +     ),
+E         +     (
+E         +         b' tim',
+E         +         b'e',
+E         +     ),
+E         +     (
+E         +         b'n',
+E         +         b'g',
+E         +     ),
+E         +     (
+E         +         b'a',
+E         +         b'k',
+E         +     ),
+E         +     (
+E         -         b'ver',
+E         ?           -
+E         +         b'er',
+E         +         b'm',
+E         +     ),
+E         +     (
+E         +         b' s',
+E         +         b'er',
+E         +     ),
+E         +     (
+E         +         b'on',
+E         +         b'g',
+E         +     ),
+E         +     (
+E         +         b' of',
+E         +         b'f',
+E         +     ),
+E         +     (
+E         +         b' p',
+E         +         b'e',
+E         +     ),
+E         +     (
+E         +         b'n',
+E         +         b'ing',
+E         +     ),
+E         +     (
+E         +         b'as',
+E         +         b'ed',
+E         +     ),
+E         +     (
+E         +         b' p',
+E         +         b'ur',
+E         +     ),
+E         +     (
+E         +         b' p',
+E         +         b'art',
+E         +     ),
+E         +     (
+E         +         b' we',
+E         +         b're',
+E         +     ),
+E         +     (
+E         +         b' ab',
+E         +         b'out',
+E         +     ),
+E         +     (
+E         +         b'a',
+E         +         b'v',
+E         +     ),
+E         +     (
+E         +         b' th',
+E         +         b'ou',
+E               ),
+E           ]
+
+tests/test_train_bpe.py:50: AssertionError
+________________________ test_train_bpe_special_tokens _________________________
+
+snapshot = <tests.conftest.Snapshot object at 0x10c752900>
+
+    def test_train_bpe_special_tokens(snapshot):
+        """
+        Ensure that the special tokens are added to the vocabulary and not
+        merged with other tokens.
+        """
+        input_path = FIXTURES_PATH / "tinystories_sample_5M.txt"
+        vocab, merges = run_train_bpe(
+            input_path=input_path,
+            vocab_size=1000,
+            special_tokens=["<|endoftext|>"],
+        )
+    
+        # Check that the special token is not in the vocab
+        vocabs_without_specials = [word for word in vocab.values() if word != b"<|endoftext|>"]
+        for word_bytes in vocabs_without_specials:
+            assert b"<|" not in word_bytes
+    
+>       snapshot.assert_match(
+            {
+                "vocab_keys": set(vocab.keys()),
+                "vocab_values": set(vocab.values()),
+                "merges": merges,
+            },
+        )
+
+tests/test_train_bpe.py:82: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/conftest.py:146: in patched_assert_match
+    return original_assert_match(actual, test_name=test_name, force_update=force_update)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <tests.conftest.Snapshot object at 0x10c752900>
+actual = {'merges': [(b'h', b'e'), (b' ', b't'), (b' ', b'a'), (b' ', b's'), (b' ', b'w'), (b'n', b'd'), ...], 'vocab_keys': {0, 1, 2, 3, 4, 5, ...}, 'vocab_values': {b'\x00', b'\x01', b'\x02', b'\x03', b'\x04', b'\x05', ...}}
+test_name = 'test_train_bpe_special_tokens', force_update = False
+
+    def assert_match(
+        self,
+        actual: _A | dict[str, _A],
+        test_name: str,
+        force_update: bool = False,
+    ):
+        """
+        Assert that the actual data matches the snapshot.
+        Args:
+            actual: Single object or dictionary of named objects
+            test_name: The name of the test (used for the snapshot file)
+            force_update: If True, update the snapshot instead of comparing
+        """
+    
+        snapshot_path = self._get_snapshot_path(test_name)
+    
+    
+        # Load the snapshot
+        with open(snapshot_path, "rb") as f:
+            expected_data = pickle.load(f)
+    
+        if isinstance(actual, dict):
+            for key in actual:
+                if key not in expected_data:
+                    raise AssertionError(f"Key '{key}' not found in snapshot for {test_name}")
+>               assert actual[key] == expected_data[key], f"Data for key '{key}' does not match snapshot for {test_name}"
+E               AssertionError: Data for key 'vocab_values' does not match snapshot for test_train_bpe_special_tokens
+E               assert {b' frog', b' didn', b' tried', b' his', b'The', b' rain', b' care', b' nodded', b' z', b' call', b' game', b' lots', b'No', b' fun', b' o', b' me', b' real', b'ri', b' beaut', b'way', b'\x01', b' jumped', b'vent', b' one', b'8', b'ay', b' thanked', b'rom', b'ways', b' po', b'udd', b' its', b'j', b'9', b'ht', b' sk', b' fly', b'ise', b' give', b' we', b'imal', b'\x00', b'\x0b', b'our', b' The', b' te', b'-', b'id', b' They', b' are', b'ist', b' park', b' pic', b' hand', b' de', b' le', b' love', b'ark', b'us', b'pr', b'Q', b' Th', b' ever', b' stopped', b' lo', b' just', b'A', b'As', b'(', b' fav', b'ger', b'ot', b'ouse', b' fin', b'at', b'ummy', b')', b'ig', b'ould', b' good', b' both', b'\t', b' nice', b'or', b'hed', b'hes', b' new', b' big', b' bird', b' speci', b'kay', b'iful', b' cook', b' work', b'itt', b' But', b'gether', b' unt', b'\x1c', b'king', b' hands', b' don', b'so', b'When', b' somet', b'ie', b' who', b'C', b'R', b'ool', b' sa', b' car', b' helped', b' Sue', b'dy', b' imp', b'a', b'nd', b' sky', b' gl', b' head', b'ady', b' st', b' an', b'/', b'if', b' s', b' to', b'end', b' learned', b' after', b' smiled', b' ta', b'\x0f', b'z', b'."', b' loud', b' each', b' ex', b's', b' fo', b'P', b' gard', b'ice', b' water', b' people', b' ag', b'gry', b' being', b'\n', b'here', b'ort', b' high', b' about', b' mean', b'my', b' did', b'ce', b'ked', b' im', b' should', b' tw', b' take', b'oy', b' also', b'irrel', b'Tom', b' mo', b' where', b' mon', b' bec', b' met', b' Mia', b'ile', b' many', b'oug', b'ong', b' fr', b' green', b'et', b' looked', b' wa', b'fter', b'ook', b'ause', b' at', b'x', b' got', b' too', b'ared', b' pie', b' when', b' cake', b'ant', b' int', b' hurt', b'H', b'M', b' scared', b'ving', b'\x7f', b'he', b'V', b' kind', b' make', b' gra', b'ull', b'orn', b' W', b'ven', b'\\', b' ab', b' until', b' named', b'oud', b' n', b'ar', b'ic', b'ty', b' bre', b'%', b'Th', b' yummy', b' sc', b'3', b'ade', b' When', b'uch', b' need', b'urt', b' keep', b'ear', b'p', b' clean', b' asked', b'en', b' kn', b'ck', b'h', b' bra', b' fl', b' r', b' started', b' say', b' her', b' will', b'more', b'ct', b'lf', b'*', b'am', b'ly', b' pret', b' rem', b' t', b' f', b' hat', b' dad', b' dre', b'\x0c', b' old', b' color', b'T', b'Can', b' p', b'\x04', b'?', b' sl', b' put', b'ided', b'iss', b' before', b'ace', b'E', b' And', b'^', b' felt', b'oon', b'\x16', b' so', b' together', b' C', b' ne', b'Tim', b' long', b' str', b' wind', b' way', b' have', b' kept', b' man', b'ip', b' things', b'ved', b' li', b' proud', b' playing', b'ink', b' Then', b' wait', b'$', b'@', b'|', b' for', b'ird', b' Sam', b' down', b' Sally', b' la', b' it', b' gave', b'ies', b'"', b'+', b'\x1d', b' friends', b' His', b'B', b' has', b' squ', b'rel', b'ited', b'\r', b'\x11', b' M', b'ime', b'ain', b'um', b'round', b' toys', b' were', b'uff', b' P', b' brave', b' book', b' heard', b' would', b' wal', b"'", b'Yes', b' dan', b' said', b' much', b' b', b' N', b' cre', b' happy', b' upon', b'ine', b' It', b'ome', b'Wh', b'get', b' excited', b' cle', b' and', b' tal', b' show', b' unex', b'ny', b'Y', b' You', b're', b'X', b' help', b'\x15', b' He', b' fe', b' Mom', b' g', b' am', b'ad', b' sand', b'ted', b' stor', b' surpr', b' h', b' sp', b' listen', b'6', b' Every', b'ure', b' bl', b' ho', b'<|endoftext|>', b'pl', b' sor', b' time', b' friend', b' I', b'ter', b' Spot', b'N', b'ith', b'S', b'st', b'ff', b't', b'ow', b' lot', b'ave', b' ch', b'ite', b'ard', b' run', b' We', b'g', b' of', b' fell', b' tra', b'be', b' but', b' always', b' best', b'\x1f', b' bad', b' v', b' took', b' Lily', b'on', b' fi', b' saw', b'nna', b' surprised', b'\x19', b'ut', b'J', b' something', b' Kitty', b'ane', b' flow', b'\x05', b' e', b' little', b' walked', b' hig', b'by', b'One', b' says', b'\x03', b' u', b' re', b'unny', b'I', b' wanted', b'They', b'rm', b'al', b'\x1b', b':', b'<', b'>', b'{', b' c', b' away', b' Anna', b'ue', b' safe', b'ohn', b'ough', b' mag', b' sm', b'[', b' hel', b' br', b' che', b'an', b'ew', b',"', b'iny', b' hugged', b' my', b'ound', b' door', b' play', b' slide', b' ran', b'im', b' co', b'4', b'_', b' She', b' more', b' come', b'ec', b' sw', b'itty', b'qu', b' hard', b'nder', b'5', b'\x13', b'U', b' go', b've', b' use', b' cou', b'ood', b' op', b' cat', b' wh', b' cl', b'Thank', b' over', b' ground', b' out', b' up', b' ey', b' walk', b'ab', b'ous', b' thought', b' From', b'ver', b' had', b'nt', b' F', b' laughed', b' soft', b' ca', b'ush', b' fix', b'dd', b' pr', b'iz', b' know', b' decided', b' room', b' Tim', b'He', b'ach', b' al', b'les', b'aut', b' Let', b'\x14', b'ber', b'as', b' pain', b' in', b' some', b' look', b'ild', b' tree', b'ed', b' happily', b'etter', b' stick', b' want', b' she', b'ld', b' dog', b' Amy', b' home', b'pp', b' he', b' story', b' noise', b'irst', b' nam', b' there', b' never', b'ried', b' open', b' ha', b'F', b'gan', b'ill', b'in', b'But', b'ock', b' see', b' lived', b' inside', b' Max', b'lew', b'iled', b'fore', b' clo', b'ack', b' In', b'em', b'You', b' us', b' as', b' thre', b' not', b'ia', b'uck', b' house', b' turn', b'udden', b'op', b' shiny', b' happened', b' get', b'ro', b' picked', b' A', b"'t", b'ent', b'!"', b' him', b' doll', b'ary', b'ess', b'are', b'ob', b';', b'nn', b' sh', b'L', b' toy', b'ss', b' fast', b' by', b' par', b' sorry', b'ick', b' th', b' en', b' how', b'It', b' do', b'self', b']', b' wor', b' sto', b'ate', b' tre', b'ings', b' beautiful', b' everyone', b' w', b' col', b'hing', b'b', b'u', b' exc', b'c', b' flew', b' share', b'ul', b' qu', b' rock', b'1', b'ally', b'out', b'pot', b'ump', b' Fluffy', b' special', b' block', b'le', b' H', b'ople', b' fam', b'e', b' played', b' family', b' while', b' animal', b'ame', b' bot', b'\x10', b' ad', b' that', b' went', b'lease', b' tow', b' strong', b' mom', b'.', b'Once', b'pected', b' blue', b'y', b'd', b'l', b'se', b' your', b' pretty', b'pt', b' leave', b'able', b' boy', b' magic', b'ge', b' ma', b'ished', b'f', b'll', b' wo', b'\n\n\n', b'ust', b'ex', b' ide', b'uc', b'riend', b'ight', b' pl', b' picture', b'}', b' D', b' what', b'\x1a', b'v', b'ought', b'Z', b'ide', b' made', b'w', b' sur', b'Mom', b'es', b' fish', b'o', b' One', b' them', b'ion', b' S', b'other', b'm', b' became', b' a', b' off', b' town', b' y', b' forest', b'0', b'ft', b' k', b' gre', b'D', b'xt', b'\x0e', b'ive', b'ank', b' their', b'Lily', b' list', b' fa', b' sing', b' rabbit', b'\x18', b'very', b' even', b' L', b'ax', b'ak', b' two', b' try', b'O', b' boat', b'ired', b' Lucy', b' day', b'ind', b'er', b' near', b'On', b' feel', b'eci', b' outside', b'uffy', b' around', b'ful', b' "', b' you', b' loved', b'ap', b'k', b'omet', b' watch', b' place', b' far', b' they', b' gr', b' j', b' other', b'side', b' bo', b' bro', b' find', b'!', b'`', b' then', b'raw', b' soon', b'7', b' than', b' knew', b' sun', b' under', b'\x06', b'G', b' Ben', b' unexpected', b' or', b' found', b'one', b'ittle', b' star', b'ag', b' com', b' l', b' told', b' end', b'&', b' next', b'Ben', b'pec', b' cu', b'un', b' liked', b'=', b' loo', b'is', b',', b' se', b'il', b'ing', b' small', b' app', b' is', b'\x12', b' store', b'\x17', b'\x08', b'ra', b' came', b'i', b' opened', b'ged', b'ched', b' yell', b' very', b'?"', b' un', b'\x1e', b"'m", b' can', b' now', b'illy', b'ake', b'her', b' idea', b' this', b' bug', b' laug', b'oh', b'th', b' girl', b' cry', b' B', b'ud', b' So', b' Tom', b'all', b'What', b'arn', b'luffy', b' anymore', b'ble', b'W', b'n', b' great', b' Now', b' flowers', b'ep', b'ke', b'\n\n', b' like', b' if', b'age', b'dded', b'ch', b' sad', b' jump', b' learn', b' clim', b' kid', b"'s", b'own', b' m', b'ers', b'og', b' Sara', b' face', b' having', b'ell', b' ke', b' all', b'abbit', b' hear', b' mommy', b' couldn', b' tired', b' pe', b'ret', b' food', b'hen', b'oo', b' stay', b' again', b' animals', b'bed', b' ate', b'ture', b'ase', b' okay', b'ou', b'om', b' E', b' clos', b' garden', b'pped', b'use', b' ball', b' hug', b'ry', b'~', b'That', b' the', b' with', b' Bob', b' box', b' J', b'fe', b' back', b' wat', b' bu', b'urn', b' sn', b' let', b'\x07', b' better', b' could', b' still', b' because', b' fore', b'ened', b'ur', b' into', b' K', b'Hi', b' no', b'el', b' ro', b' every', b' red', b' on', b' any', b' bear', b' eat', b'uddenly', b' smile', b' lost', b'ir', b'ish', b'ised', b' Wh', b' warm', b'\x02', b'Let', b'#', b' sat', b' was', b'ara', b'bit', b' tr', b' from', b' Her', b' showed', b'it', b'ug', b' gir', b' dec', b' called', b' ', b' pa', b'q', b'2', b' d', b' angry', b'ore', b' happ', b'Look', b'elt', b'K', b'ily', b'ucy', b'r', b'day', b'owl', b' careful', b' kids', b'and', b' be', b' T'} == {b' frog', b' didn', b' tried', b' his', b'The', b' care', b'\xe5', b' call', b' lots', b'No', b' fun', b' o', b' me', b'ri', b' beaut', b'way', b'\x01', b' jumped', b' one', b'ay', b'8', b' thanked', b'rom', b'\xe9', b'ways', b'udd', b' po', b' its', b'j', b'ht', b'9', b' fly', b' sk', b'ise', b' give', b' we', b'imal', b' te', b'\x0b', b'\x00', b'our', b' The', b'-', b' They', b'id', b'\xff', b' are', b'ist', b' hand', b' pic', b' park', b' love', b' le', b'us', b'ark', b' Th', b' ever', b'Q', b'pr', b' lo', b' just', b'A', b'As', b'(', b'\xe6', b'ot', b'ouse', b'at', b'ummy', b')', b'ig', b'ould', b' good', b' both', b'\t', b' nice', b'\x8e', b'or', b'\xf0', b'kay', b' big', b' new', b'hes', b' bird', b'hed', b'itt', b' But', b' unt', b'\x83', b'\xd0', b'\x1c', b'king', b'gether', b'\xa5', b' don', b' somet', b'\xc1', b'\xc8', b'\xb7', b'ie', b' who', b'ool', b'R', b'C', b' sa', b' car', b' helped', b'dy', b' Sue', b'a', b'nd', b' sky', b' gl', b'\x90', b'\xf7', b'ady', b' st', b' learned', b'/', b'if', b' s', b' to', b' an', b'end', b' after', b' smiled', b' ta', b'\x0f', b'\x93', b'z', b' loud', b'."', b' each', b' ex', b's', b' fo', b'\xd1', b'P', b'ice', b' water', b'\xa1', b' people', b' ag', b'gry', b'here', b'\n', b'ort', b' high', b' about', b'my', b' did', b'ce', b'ked', b'\xb6', b'oy', b' tw', b' take', b' should', b' im', b'Tom', b'\xd8', b' mo', b'\xeb', b' bec', b' met', b' Mia', b'ile', b' many', b'\xf1', b'oug', b'ong', b' fr', b'et', b' looked', b' wa', b'fter', b'ook', b'ause', b' at', b' got', b'x', b' too', b'ared', b' when', b'\xfb', b' cake', b'ant', b' hurt', b' int', b'H', b'\xee', b'M', b'ving', b'he', b'\x7f', b'\xc4', b'V', b' scared', b' kind', b'\xfa', b' make', b' gra', b'ull', b'orn', b' W', b'ven', b' ab', b'\\', b' until', b' named', b'oud', b'ic', b'ar', b' n', b'ty', b'%', b'\xd3', b'Th', b'\xa0', b' sc', b'3', b'ade', b' When', b' need', b'\xac', b'uch', b'urt', b'p', b' clean', b' asked', b'en', b' kn', b'\xf8', b'ck', b'h', b' fl', b' r', b' started', b' say', b' her', b' will', b'more', b'ct', b'lf', b'*', b'am', b'ly', b' pret', b' t', b' f', b' hat', b' dad', b' dre', b'\x0c', b'\x8d', b'\xab', b' old', b' color', b'T', b'Can', b'\x9e', b'\x04', b'?', b' sl', b' put', b'ided', b' p', b'ace', b'E', b' And', b'^', b' felt', b'\xb1', b' so', b'\x16', b' together', b'\x9b', b' ne', b' long', b'Tim', b'\xea', b' str', b' wind', b'\xc3', b' way', b'\xe7', b' have', b' man', b'ip', b' things', b'ved', b' li', b' Then', b'ink', b' playing', b' proud', b'\xb8', b'\xed', b'\xd9', b'@', b'$', b'|', b' for', b' Sam', b'ird', b' down', b' Sally', b'expected', b' la', b' it', b' gave', b'ies', b'"', b'+', b'\x1d', b' friends', b' His', b'B', b'\xcb', b' squ', b'ited', b'ain', b'ime', b'uff', b' M', b'um', b'round', b'\r', b'\x11', b' were', b'\xaa', b' P', b' toys', b' book', b'\x9c', b' heard', b' would', b' wal', b"'", b'\xb3', b'Yes', b' dan', b' much', b' N', b' b', b' said', b' happy', b'ine', b' upon', b' It', b'ome', b'Wh', b' tal', b' cle', b'get', b' excited', b' and', b' show', b'\x86', b'ny', b'Y', b' You', b'\xcd', b' help', b'X', b're', b'\x15', b' fe', b' Mom', b' He', b' g', b'\xe4', b' am', b'ad', b'ted', b' stor', b' surpr', b' sp', b' h', b'\xfe', b' listen', b'\xf4', b'6', b' Every', b'\x84', b' ho', b'ure', b' bl', b'<|endoftext|>', b'pl', b' sor', b' time', b' friend', b' I', b'\x87', b'ter', b' Spot', b'N', b'ith', b'S', b'st', b'ff', b't', b' lot', b'ite', b'ow', b' ch', b'ave', b'ard', b' run', b' We', b'g', b' of', b' but', b' best', b' always', b'\x1f', b' bad', b'\xa3', b' v', b' took', b' Lily', b'\xfc', b' fi', b'on', b'nna', b' saw', b' surprised', b'ut', b'\x19', b' Kitty', b'J', b' something', b'\xa8', b' flow', b'\x05', b' e', b' little', b'by', b' hig', b' walked', b'One', b' says', b'\x03', b' u', b' re', b'\xe2\x80', b'I', b' wanted', b'They', b'rm', b'al', b' kid', b'<', b'{', b'\x1b', b' away', b'>', b':', b' c', b' Anna', b'\xcc', b'ue', b' safe', b'ough', b' mag', b'\xa7', b' sm', b'[', b'\xdc', b' hel', b' br', b'\xa6', b' che', b'\xef', b'iny', b' hugged', b'ew', b',"', b'an', b'\xf6', b' door', b' my', b'ound', b' play', b'arden', b' ran', b'im', b' co', b' come', b'_', b' more', b' She', b'4', b'ec', b'itty', b' sw', b' hard', b'qu', b'\x95', b'nder', b'5', b' go', b'U', b'\x13', b've', b'\xb2', b'ood', b' op', b' cat', b' cl', b'Thank', b' ground', b' over', b' wh', b' out', b' up', b'\xbe', b' walk', b'ab', b'ous', b' thought', b' From', b' had', b'ver', b'nt', b' laughed', b' F', b' ca', b'\xaf', b'iz', b'dd', b' pr', b' know', b' decided', b' room', b'\xc2', b' Tim', b'ach', b'les', b' al', b'\xf9', b'aut', b'\x14', b'ber', b'as', b' in', b' some', b' look', b'ild', b' tree', b'ed', b' happily', b' stick', b'etter', b' want', b' she', b'ld', b' dog', b'\xae', b' home', b'pp', b' he', b'\x9d', b' there', b' nam', b'\xb0', b' never', b'ried', b'\xc6', b' ha', b'F', b'\xe1', b'ill', b'\x81', b'in', b'\xdb', b'But', b' see', b' lived', b' inside', b' Max', b'lew', b'iled', b'\xb9', b'\xd4', b' clo', b'ack', b'\x80', b'em', b' In', b'\x94', b'You', b' us', b'\x98', b' as', b' not', b' turn', b'ia', b' house', b'uck', b'udden', b'op', b' shiny', b' happened', b' get', b'ro', b' picked', b' A', b"'t", b'ent', b'!"', b' him', b' doll', b'ary', b'ess', b'are', b'ob', b'\xc0', b';', b' by', b' fast', b'nn', b'\x96', b'L', b' sh', b' toy', b' par', b' sorry', b'ss', b'ick', b' th', b' en', b' how', b' do', b']', b'\xd7', b' wor', b' sto', b'ate', b' tre', b'\xc5', b'ings', b' w', b' col', b'hing', b' exc', b'u', b' flew', b'c', b'b', b' share', b'ul', b' qu', b' rock', b'1', b'ally', b'out', b'pot', b'ump', b' special', b'le', b' H', b'ople', b' fam', b'e', b' played', b' family', b' animal', b'ame', b' bot', b'\x10', b' that', b' went', b' tow', b' strong', b'\x91', b'\xbb', b'\xa2', b'Once', b'.', b' mom', b'\x85', b'pected', b' blue', b'y', b'\xda', b' your', b' pretty', b'd', b'l', b'se', b'able', b' magic', b' boy', b'ge', b' ma', b'll', b'f', b'ust', b'ex', b' ide', b'uc', b'riend', b'ight', b' pl', b' D', b'}', b' what', b'\x1a', b' made', b'ought', b'Mom', b'ide', b' sur', b'w', b'\x92', b'Z', b'v', b'es', b' fish', b'o', b' One', b' them', b'ion', b' S', b'other', b'm', b' became', b' a', b' off', b' town', b' y', b'\xb4', b' forest', b'\xca', b'0', b'ft', b'xt', b' k', b'D', b' gre', b'ive', b'\x0e', b'ank', b' their', b' list', b'Lily', b' fa', b'\x18', b'very', b' even', b' L', b'ax', b'ak', b' try', b'O', b' boat', b' Lucy', b' day', b'ind', b'er', b' near', b'On', b' feel', b'eci', b' outside', b'uffy', b'\xb5', b' around', b'ful', b' "', b' you', b' loved', b'\x88', b'k', b'ap', b'omet', b'\xc9', b'\x8b', b' place', b' far', b' they', b' gr', b' j', b' other', b'side', b' bo', b' bro', b'\xde', b' find', b'!', b'`', b' then', b'\xe8', b'7', b' than', b' under', b' sun', b' knew', b'\xd2', b'\x06', b'G', b' Ben', b' unexpected', b' or', b'\xa4', b' found', b'one', b'ittle', b' ro', b' star', b'ag', b' com', b' l', b' told', b' end', b'&', b' next', b' cu', b'pec', b' liked', b'un', b'=', b' loo', b'is', b' small', b',', b' app', b'ing', b'il', b'\xfd', b' is', b'\xbc', b' se', b'\x17', b'\x08', b'\x12', b'ra', b' came', b'\xf3', b' opened', b'i', b'ged', b'ched', b'\xe3', b'\x8c', b' very', b'?"', b'\xc7', b'\xbf', b' un', b'\x1e', b"'m", b' can', b' now', b'ake', b'her', b' idea', b' this', b' bug', b' laug', b' girl', b' B', b'\xf5', b'\xe0', b' So', b' Tom', b'all', b'arn', b' anymore', b'W', b'n', b' great', b'\x99', b'ep', b'ke', b'\n\n', b' like', b' if', b'age', b'\x82', b'ch', b' sad', b'\xcf', b'\xad', b' jump', b' learn', b'\xba', b' clim', b'ers', b'og', b' m', b'\xce', b'own', b' Sara', b"'s", b'\xbd', b'ell', b' ke', b' all', b'\x9f', b' pe', b'ret', b' food', b'hen', b'oo', b' again', b' animals', b'bed', b'ture', b'ase', b'\xdd', b'ou', b'om', b' E', b'\x8a', b' garden', b'pped', b'use', b' ball', b' hug', b'ry', b'~', b'\xec', b' with', b' the', b' Bob', b' box', b'fe', b' J', b'ecial', b' back', b' bu', b' wat', b'urn', b' sn', b' still', b'\x07', b' better', b' could', b' let', b' fore', b' because', b'ened', b'ur', b' into', b' K', b' no', b' bear', b'and', b'el', b' any', b'uddenly', b' on', b' smile', b' eat', b' every', b' red', b'\x89', b'ir', b'\x9a', b'ish', b'\xe2', b'\x97', b'ised', b'\xf2', b'\x02', b'Let', b'#', b' was', b'\xd5', b'ara', b'\x8f', b' tr', b' from', b' showed', b' Her', b'ug', b' dec', b'it', b' gir', b' ', b'\xdf', b'q', b'2', b' d', b'\xa9', b'ore', b' happ', b'elt', b'\xd6', b'K', b'ily', b'ucy', b'r', b' careful', b' Amy', b' be', b' T'}
+E                 
+E                 Extra items in the left set:
+E                 b' rain'
+E                 b' nodded'
+E                 b' z'
+E                 b'oon'
+E                 b' game'
+E                 b'He'
+E                 b' C'
+E                 b' Let'
+E                 b' watch'
+E                 b' real'
+E                 b' pain'
+E                 b'vent'
+E                 b' kept'
+E                 b' wait'
+E                 b'raw'
+E                 b' soon'
+E                 b' de'
+E                 b' story'
+E                 b' noise'
+E                 b' has'
+E                 b' stopped'
+E                 b'rel'
+E                 b'irst'
+E                 b' brave'
+E                 b' fav'
+E                 b' open'
+E                 b'ger'
+E                 b'gan'
+E                 b' fin'
+E                 b'Ben'
+E                 b'ock'
+E                 b' cre'
+E                 b' rabbit'
+E                 b' store'
+E                 b'fore'
+E                 b' work'
+E                 b' speci'
+E                 b'iful'
+E                 b' cook'
+E                 b' unex'
+E                 b' yell'
+E                 b' thre'
+E                 b' hands'
+E                 b'so'
+E                 b'When'
+E                 b' sand'
+E                 b'illy'
+E                 b'oh'
+E                 b'th'
+E                 b' imp'
+E                 b' cry'
+E                 b'ud'
+E                 b' head'
+E                 b'What'
+E                 b'luffy'
+E                 b'ble'
+E                 b'It'
+E                 b'self'
+E                 b' Now'
+E                 b' flowers'
+E                 b'dded'
+E                 b' beautiful'
+E                 b' everyone'
+E                 b' fell'
+E                 b' gard'
+E                 b' tra'
+E                 b'be'
+E                 b' face'
+E                 b' being'
+E                 b' mean'
+E                 b' having'
+E                 b' Fluffy'
+E                 b' block'
+E                 b'abbit'
+E                 b' hear'
+E                 b' mommy'
+E                 b' also'
+E                 b' while'
+E                 b' couldn'
+E                 b'irrel'
+E                 b' tired'
+E                 b' ad'
+E                 b' where'
+E                 b' mon'
+E                 b'ane'
+E                 b' stay'
+E                 b'lease'
+E                 b' ate'
+E                 b'unny'
+E                 b' green'
+E                 b' okay'
+E                 b' clos'
+E                 b' leave'
+E                 b'pt'
+E                 b' pie'
+E                 b'ished'
+E                 b'That'
+E                 b'ohn'
+E                 b' wo'
+E                 b'\n\n\n'
+E                 b' picture'
+E                 b' sat'
+E                 b'Hi'
+E                 b' lost'
+E                 b' bre'
+E                 b' yummy'
+E                 b' slide'
+E                 b' keep'
+E                 b'ear'
+E                 b' Wh'
+E                 b' warm'
+E                 b' bra'
+E                 b'bit'
+E                 b' cou'
+E                 b' use'
+E                 b'ired'
+E                 b' called'
+E                 b' rem'
+E                 b' pa'
+E                 b' angry'
+E                 b' sing'
+E                 b'Look'
+E                 b' ey'
+E                 b'day'
+E                 b'iss'
+E                 b'owl'
+E                 b' two'
+E                 b' kids'
+E                 b' fix'
+E                 b' soft'
+E                 b' before'
+E                 b'ush'
+E                 Extra items in the right set:
+E                 b'\xe5'
+E                 b'\xc2'
+E                 b'\xb5'
+E                 b'\xb1'
+E                 b'\xf9'
+E                 b'\x9b'
+E                 b'\x88'
+E                 b'\xc9'
+E                 b'\xea'
+E                 b'\x8b'
+E                 b'\xc3'
+E                 b'\xe7'
+E                 b'\xe9'
+E                 b'\xde'
+E                 b'\xb8'
+E                 b'\xed'
+E                 b'\xd9'
+E                 b'expected'
+E                 b'\xe8'
+E                 b'\xff'
+E                 b'\xd2'
+E                 b'\xae'
+E                 b'\xcb'
+E                 b'\x9d'
+E                 b'\xb0'
+E                 b'\xa4'
+E                 b'\xaa'
+E                 b'\xe6'
+E                 b'\xc6'
+E                 b'\xe1'
+E                 b'\x81'
+E                 b'\x9c'
+E                 b'\xdb'
+E                 b'\xb3'
+E                 b'\xfd'
+E                 b'\xbc'
+E                 b'\xb9'
+E                 b'\x8e'
+E                 b'\xf0'
+E                 b'\xd4'
+E                 b'\x80'
+E                 b'\xf3'
+E                 b'\x94'
+E                 b'\x86'
+E                 b'\xd0'
+E                 b'\x83'
+E                 b'\x98'
+E                 b'\xe3'
+E                 b'\xcd'
+E                 b'\x8c'
+E                 b'\xa5'
+E                 b'\xc7'
+E                 b'\xe4'
+E                 b'\xbf'
+E                 b'\xc1'
+E                 b'\xb7'
+E                 b'\xc8'
+E                 b'\xfe'
+E                 b'\xf4'
+E                 b'\x84'
+E                 b'\x90'
+E                 b'\xf5'
+E                 b'\xe0'
+E                 b'\xf7'
+E                 b'\xc0'
+E                 b'\x96'
+E                 b'\x87'
+E                 b'\x93'
+E                 b'\xd7'
+E                 b'\x99'
+E                 b'\xc5'
+E                 b'\x82'
+E                 b'\xd1'
+E                 b'\xcf'
+E                 b'\xad'
+E                 b'\xba'
+E                 b'\xa1'
+E                 b'\xa3'
+E                 b'\xce'
+E                 b'\xbd'
+E                 b'\xfc'
+E                 b'\xb6'
+E                 b'\x9f'
+E                 b'\xeb'
+E                 b'\xd8'
+E                 b'\xa8'
+E                 b'\xf1'
+E                 b'\x91'
+E                 b'\xbb'
+E                 b'\xa2'
+E                 b'\x8a'
+E                 b'\xe2\x80'
+E                 b'\xdd'
+E                 b'\x85'
+E                 b'\xda'
+E                 b'\xcc'
+E                 b'\xec'
+E                 b'\xfb'
+E                 b'\xa7'
+E                 b'\xee'
+E                 b'ecial'
+E                 b'\xdc'
+E                 b'\xc4'
+E                 b'\xfa'
+E                 b'\xa6'
+E                 b'\x92'
+E                 b'\xef'
+E                 b'\xf6'
+E                 b'\x89'
+E                 b'\xd3'
+E                 b'\x9a'
+E                 b'\xa0'
+E                 b'arden'
+E                 b'\xe2'
+E                 b'\xac'
+E                 b'\x97'
+E                 b'\xf2'
+E                 b'\xb4'
+E                 b'\xf8'
+E                 b'\xca'
+E                 b'\x95'
+E                 b'\xd5'
+E                 b'\x8f'
+E                 b'\xb2'
+E                 b'\xdf'
+E                 b'\xa9'
+E                 b'\x8d'
+E                 b'\xab'
+E                 b'\xbe'
+E                 b'\xd6'
+E                 b'\x9e'
+E                 b'\xaf'
+E                 
+E                 Full diff:
+E                   {
+E                       b'\x00',
+E                       b'\x01',
+E                       b'\x02',
+E                       b'\x03',
+E                       b'\x04',
+E                       b'\x05',
+E                       b'\x06',
+E                       b'\x07',
+E                       b'\x08',
+E                       b'\t',
+E                       b'\n',
+E                       b'\n\n',
+E                 +     b'\n\n\n',
+E                       b'\x0b',
+E                       b'\x0c',
+E                       b'\r',
+E                       b'\x0e',
+E                       b'\x0f',
+E                       b'\x10',
+E                       b'\x11',
+E                       b'\x12',
+E                       b'\x13',
+E                       b'\x14',
+E                       b'\x15',
+E                       b'\x16',
+E                       b'\x17',
+E                       b'\x18',
+E                       b'\x19',
+E                       b'\x1a',
+E                       b'\x1b',
+E                       b'\x1c',
+E                       b'\x1d',
+E                       b'\x1e',
+E                       b'\x1f',
+E                       b' ',
+E                       b' "',
+E                       b' A',
+E                       b' Amy',
+E                       b' And',
+E                       b' Anna',
+E                       b' B',
+E                       b' Ben',
+E                       b' Bob',
+E                       b' But',
+E                 +     b' C',
+E                       b' D',
+E                       b' E',
+E                       b' Every',
+E                       b' F',
+E                 +     b' Fluffy',
+E                       b' From',
+E                       b' H',
+E                       b' He',
+E                       b' Her',
+E                       b' His',
+E                       b' I',
+E                       b' In',
+E                       b' It',
+E                       b' J',
+E                       b' K',
+E                       b' Kitty',
+E                       b' L',
+E                 +     b' Let',
+E                       b' Lily',
+E                       b' Lucy',
+E                       b' M',
+E                       b' Max',
+E                       b' Mia',
+E                       b' Mom',
+E                       b' N',
+E                 +     b' Now',
+E                       b' One',
+E                       b' P',
+E                       b' S',
+E                       b' Sally',
+E                       b' Sam',
+E                       b' Sara',
+E                       b' She',
+E                       b' So',
+E                       b' Spot',
+E                       b' Sue',
+E                       b' T',
+E                       b' Th',
+E                       b' The',
+E                       b' Then',
+E                       b' They',
+E                       b' Tim',
+E                       b' Tom',
+E                       b' W',
+E                       b' We',
+E                 +     b' Wh',
+E                       b' When',
+E                       b' You',
+E                       b' a',
+E                       b' ab',
+E                       b' about',
+E                 +     b' ad',
+E                       b' after',
+E                       b' ag',
+E                       b' again',
+E                       b' al',
+E                       b' all',
+E                 +     b' also',
+E                       b' always',
+E                       b' am',
+E                       b' an',
+E                       b' and',
+E                 +     b' angry',
+E                       b' animal',
+E                       b' animals',
+E                       b' any',
+E                       b' anymore',
+E                       b' app',
+E                       b' are',
+E                       b' around',
+E                       b' as',
+E                       b' asked',
+E                       b' at',
+E                 +     b' ate',
+E                       b' away',
+E                       b' b',
+E                       b' back',
+E                       b' bad',
+E                       b' ball',
+E                       b' be',
+E                       b' bear',
+E                       b' beaut',
+E                 +     b' beautiful',
+E                       b' bec',
+E                       b' became',
+E                       b' because',
+E                 +     b' before',
+E                 +     b' being',
+E                       b' best',
+E                       b' better',
+E                       b' big',
+E                       b' bird',
+E                       b' bl',
+E                 +     b' block',
+E                       b' blue',
+E                       b' bo',
+E                       b' boat',
+E                       b' book',
+E                       b' bot',
+E                       b' both',
+E                       b' box',
+E                       b' boy',
+E                       b' br',
+E                 +     b' bra',
+E                 +     b' brave',
+E                 +     b' bre',
+E                       b' bro',
+E                       b' bu',
+E                       b' bug',
+E                       b' but',
+E                       b' by',
+E                       b' c',
+E                       b' ca',
+E                       b' cake',
+E                       b' call',
+E                 +     b' called',
+E                       b' came',
+E                       b' can',
+E                       b' car',
+E                       b' care',
+E                       b' careful',
+E                       b' cat',
+E                       b' ch',
+E                       b' che',
+E                       b' cl',
+E                       b' cle',
+E                       b' clean',
+E                       b' clim',
+E                       b' clo',
+E                 +     b' clos',
+E                       b' co',
+E                       b' col',
+E                       b' color',
+E                       b' com',
+E                       b' come',
+E                 +     b' cook',
+E                 +     b' cou',
+E                       b' could',
+E                 +     b' couldn',
+E                 +     b' cre',
+E                 +     b' cry',
+E                       b' cu',
+E                       b' d',
+E                       b' dad',
+E                       b' dan',
+E                       b' day',
+E                 +     b' de',
+E                       b' dec',
+E                       b' decided',
+E                       b' did',
+E                       b' didn',
+E                       b' do',
+E                       b' dog',
+E                       b' doll',
+E                       b' don',
+E                       b' door',
+E                       b' down',
+E                       b' dre',
+E                       b' e',
+E                       b' each',
+E                       b' eat',
+E                       b' en',
+E                       b' end',
+E                       b' even',
+E                       b' ever',
+E                       b' every',
+E                 +     b' everyone',
+E                       b' ex',
+E                       b' exc',
+E                       b' excited',
+E                 +     b' ey',
+E                       b' f',
+E                       b' fa',
+E                 +     b' face',
+E                       b' fam',
+E                       b' family',
+E                       b' far',
+E                       b' fast',
+E                 +     b' fav',
+E                       b' fe',
+E                       b' feel',
+E                 +     b' fell',
+E                       b' felt',
+E                       b' fi',
+E                 +     b' fin',
+E                       b' find',
+E                       b' fish',
+E                 +     b' fix',
+E                       b' fl',
+E                       b' flew',
+E                       b' flow',
+E                 +     b' flowers',
+E                       b' fly',
+E                       b' fo',
+E                       b' food',
+E                       b' for',
+E                       b' fore',
+E                       b' forest',
+E                       b' found',
+E                       b' fr',
+E                       b' friend',
+E                       b' friends',
+E                       b' frog',
+E                       b' from',
+E                       b' fun',
+E                       b' g',
+E                 +     b' game',
+E                 +     b' gard',
+E                       b' garden',
+E                       b' gave',
+E                       b' get',
+E                       b' gir',
+E                       b' girl',
+E                       b' give',
+E                       b' gl',
+E                       b' go',
+E                       b' good',
+E                       b' got',
+E                       b' gr',
+E                       b' gra',
+E                       b' gre',
+E                       b' great',
+E                 +     b' green',
+E                       b' ground',
+E                       b' h',
+E                       b' ha',
+E                       b' had',
+E                       b' hand',
+E                 +     b' hands',
+E                       b' happ',
+E                       b' happened',
+E                       b' happily',
+E                       b' happy',
+E                       b' hard',
+E                 +     b' has',
+E                       b' hat',
+E                       b' have',
+E                 +     b' having',
+E                       b' he',
+E                 +     b' head',
+E                 +     b' hear',
+E                       b' heard',
+E                       b' hel',
+E                       b' help',
+E                       b' helped',
+E                       b' her',
+E                       b' hig',
+E                       b' high',
+E                       b' him',
+E                       b' his',
+E                       b' ho',
+E                       b' home',
+E                       b' house',
+E                       b' how',
+E                       b' hug',
+E                       b' hugged',
+E                       b' hurt',
+E                       b' ide',
+E                       b' idea',
+E                       b' if',
+E                       b' im',
+E                 +     b' imp',
+E                       b' in',
+E                       b' inside',
+E                       b' int',
+E                       b' into',
+E                       b' is',
+E                       b' it',
+E                       b' its',
+E                       b' j',
+E                       b' jump',
+E                       b' jumped',
+E                       b' just',
+E                       b' k',
+E                       b' ke',
+E                 +     b' keep',
+E                 +     b' kept',
+E                       b' kid',
+E                 +     b' kids',
+E                       b' kind',
+E                       b' kn',
+E                       b' knew',
+E                       b' know',
+E                       b' l',
+E                       b' la',
+E                       b' laug',
+E                       b' laughed',
+E                       b' le',
+E                       b' learn',
+E                       b' learned',
+E                 +     b' leave',
+E                       b' let',
+E                       b' li',
+E                       b' like',
+E                       b' liked',
+E                       b' list',
+E                       b' listen',
+E                       b' little',
+E                       b' lived',
+E                       b' lo',
+E                       b' long',
+E                       b' loo',
+E                       b' look',
+E                       b' looked',
+E                 +     b' lost',
+E                       b' lot',
+E                       b' lots',
+E                       b' loud',
+E                       b' love',
+E                       b' loved',
+E                       b' m',
+E                       b' ma',
+E                       b' made',
+E                       b' mag',
+E                       b' magic',
+E                       b' make',
+E                       b' man',
+E                       b' many',
+E                       b' me',
+E                 +     b' mean',
+E                       b' met',
+E                       b' mo',
+E                       b' mom',
+E                 +     b' mommy',
+E                 +     b' mon',
+E                       b' more',
+E                       b' much',
+E                       b' my',
+E                       b' n',
+E                       b' nam',
+E                       b' named',
+E                       b' ne',
+E                       b' near',
+E                       b' need',
+E                       b' never',
+E                       b' new',
+E                       b' next',
+E                       b' nice',
+E                       b' no',
+E                 +     b' nodded',
+E                 +     b' noise',
+E                       b' not',
+E                       b' now',
+E                       b' o',
+E                       b' of',
+E                       b' off',
+E                 +     b' okay',
+E                       b' old',
+E                       b' on',
+E                       b' one',
+E                       b' op',
+E                 +     b' open',
+E                       b' opened',
+E                       b' or',
+E                       b' other',
+E                       b' out',
+E                       b' outside',
+E                       b' over',
+E                       b' p',
+E                 +     b' pa',
+E                 +     b' pain',
+E                       b' par',
+E                       b' park',
+E                       b' pe',
+E                       b' people',
+E                       b' pic',
+E                       b' picked',
+E                 +     b' picture',
+E                 +     b' pie',
+E                       b' pl',
+E                       b' place',
+E                       b' play',
+E                       b' played',
+E                       b' playing',
+E                       b' po',
+E                       b' pr',
+E                       b' pret',
+E                       b' pretty',
+E                       b' proud',
+E                       b' put',
+E                       b' qu',
+E                       b' r',
+E                 +     b' rabbit',
+E                 +     b' rain',
+E                       b' ran',
+E                       b' re',
+E                 +     b' real',
+E                       b' red',
+E                 +     b' rem',
+E                       b' ro',
+E                       b' rock',
+E                       b' room',
+E                       b' run',
+E                       b' s',
+E                       b' sa',
+E                       b' sad',
+E                       b' safe',
+E                       b' said',
+E                 +     b' sand',
+E                 +     b' sat',
+E                       b' saw',
+E                       b' say',
+E                       b' says',
+E                       b' sc',
+E                       b' scared',
+E                       b' se',
+E                       b' see',
+E                       b' sh',
+E                       b' share',
+E                       b' she',
+E                       b' shiny',
+E                       b' should',
+E                       b' show',
+E                       b' showed',
+E                 +     b' sing',
+E                       b' sk',
+E                       b' sky',
+E                       b' sl',
+E                 +     b' slide',
+E                       b' sm',
+E                       b' small',
+E                       b' smile',
+E                       b' smiled',
+E                       b' sn',
+E                       b' so',
+E                 +     b' soft',
+E                       b' some',
+E                       b' somet',
+E                       b' something',
+E                 +     b' soon',
+E                       b' sor',
+E                       b' sorry',
+E                       b' sp',
+E                 +     b' speci',
+E                       b' special',
+E                       b' squ',
+E                       b' st',
+E                       b' star',
+E                       b' started',
+E                 +     b' stay',
+E                       b' stick',
+E                       b' still',
+E                       b' sto',
+E                 +     b' stopped',
+E                       b' stor',
+E                 +     b' store',
+E                 +     b' story',
+E                       b' str',
+E                       b' strong',
+E                       b' sun',
+E                       b' sur',
+E                       b' surpr',
+E                       b' surprised',
+E                       b' sw',
+E                       b' t',
+E                       b' ta',
+E                       b' take',
+E                       b' tal',
+E                       b' te',
+E                       b' th',
+E                       b' than',
+E                       b' thanked',
+E                       b' that',
+E                       b' the',
+E                       b' their',
+E                       b' them',
+E                       b' then',
+E                       b' there',
+E                       b' they',
+E                       b' things',
+E                       b' this',
+E                       b' thought',
+E                 +     b' thre',
+E                       b' time',
+E                 +     b' tired',
+E                       b' to',
+E                       b' together',
+E                       b' told',
+E                       b' too',
+E                       b' took',
+E                       b' tow',
+E                       b' town',
+E                       b' toy',
+E                       b' toys',
+E                       b' tr',
+E                 +     b' tra',
+E                       b' tre',
+E                       b' tree',
+E                       b' tried',
+E                       b' try',
+E                       b' turn',
+E                       b' tw',
+E                 +     b' two',
+E                       b' u',
+E                       b' un',
+E                       b' under',
+E                 +     b' unex',
+E                       b' unexpected',
+E                       b' unt',
+E                       b' until',
+E                       b' up',
+E                       b' upon',
+E                       b' us',
+E                 +     b' use',
+E                       b' v',
+E                       b' very',
+E                       b' w',
+E                       b' wa',
+E                 +     b' wait',
+E                       b' wal',
+E                       b' walk',
+E                       b' walked',
+E                       b' want',
+E                       b' wanted',
+E                 +     b' warm',
+E                       b' was',
+E                       b' wat',
+E                 +     b' watch',
+E                       b' water',
+E                       b' way',
+E                       b' we',
+E                       b' went',
+E                       b' were',
+E                       b' wh',
+E                       b' what',
+E                       b' when',
+E                 +     b' where',
+E                 +     b' while',
+E                       b' who',
+E                       b' will',
+E                       b' wind',
+E                       b' with',
+E                 +     b' wo',
+E                       b' wor',
+E                 +     b' work',
+E                       b' would',
+E                       b' y',
+E                 +     b' yell',
+E                       b' you',
+E                       b' your',
+E                 +     b' yummy',
+E                 +     b' z',
+E                       b'!',
+E                       b'!"',
+E                       b'"',
+E                       b'#',
+E                       b'$',
+E                       b'%',
+E                       b'&',
+E                       b"'",
+E                       b"'m",
+E                       b"'s",
+E                       b"'t",
+E                       b'(',
+E                       b')',
+E                       b'*',
+E                       b'+',
+E                       b',',
+E                       b',"',
+E                       b'-',
+E                       b'.',
+E                       b'."',
+E                       b'/',
+E                       b'0',
+E                       b'1',
+E                       b'2',
+E                       b'3',
+E                       b'4',
+E                       b'5',
+E                       b'6',
+E                       b'7',
+E                       b'8',
+E                       b'9',
+E                       b':',
+E                       b';',
+E                       b'<',
+E                       b'<|endoftext|>',
+E                       b'=',
+E                       b'>',
+E                       b'?',
+E                       b'?"',
+E                       b'@',
+E                       b'A',
+E                       b'As',
+E                       b'B',
+E                 +     b'Ben',
+E                       b'But',
+E                       b'C',
+E                       b'Can',
+E                       b'D',
+E                       b'E',
+E                       b'F',
+E                       b'G',
+E                       b'H',
+E                 +     b'He',
+E                 +     b'Hi',
+E                       b'I',
+E                 +     b'It',
+E                       b'J',
+E                       b'K',
+E                       b'L',
+E                       b'Let',
+E                       b'Lily',
+E                 +     b'Look',
+E                       b'M',
+E                       b'Mom',
+E                       b'N',
+E                       b'No',
+E                       b'O',
+E                       b'On',
+E                       b'Once',
+E                       b'One',
+E                       b'P',
+E                       b'Q',
+E                       b'R',
+E                       b'S',
+E                       b'T',
+E                       b'Th',
+E                       b'Thank',
+E                 +     b'That',
+E                       b'The',
+E                       b'They',
+E                       b'Tim',
+E                       b'Tom',
+E                       b'U',
+E                       b'V',
+E                       b'W',
+E                       b'Wh',
+E                 +     b'What',
+E                 +     b'When',
+E                       b'X',
+E                       b'Y',
+E                       b'Yes',
+E                       b'You',
+E                       b'Z',
+E                       b'[',
+E                       b'\\',
+E                       b']',
+E                       b'^',
+E                       b'_',
+E                       b'`',
+E                       b'a',
+E                       b'ab',
+E                 +     b'abbit',
+E                       b'able',
+E                       b'ace',
+E                       b'ach',
+E                       b'ack',
+E                       b'ad',
+E                       b'ade',
+E                       b'ady',
+E                       b'ag',
+E                       b'age',
+E                       b'ain',
+E                       b'ak',
+E                       b'ake',
+E                       b'al',
+E                       b'all',
+E                       b'ally',
+E                       b'am',
+E                       b'ame',
+E                       b'an',
+E                       b'and',
+E                 +     b'ane',
+E                       b'ank',
+E                       b'ant',
+E                       b'ap',
+E                       b'ar',
+E                       b'ara',
+E                       b'ard',
+E                 -     b'arden',
+E                       b'are',
+E                       b'ared',
+E                       b'ark',
+E                       b'arn',
+E                       b'ary',
+E                       b'as',
+E                       b'ase',
+E                       b'at',
+E                       b'ate',
+E                       b'ause',
+E                       b'aut',
+E                       b'ave',
+E                       b'ax',
+E                       b'ay',
+E                       b'b',
+E                 +     b'be',
+E                       b'bed',
+E                       b'ber',
+E                 +     b'bit',
+E                 +     b'ble',
+E                       b'by',
+E                       b'c',
+E                       b'ce',
+E                       b'ch',
+E                       b'ched',
+E                       b'ck',
+E                       b'ct',
+E                       b'd',
+E                 +     b'day',
+E                       b'dd',
+E                 +     b'dded',
+E                       b'dy',
+E                       b'e',
+E                 +     b'ear',
+E                       b'ec',
+E                       b'eci',
+E                 -     b'ecial',
+E                       b'ed',
+E                       b'el',
+E                       b'ell',
+E                       b'elt',
+E                       b'em',
+E                       b'en',
+E                       b'end',
+E                       b'ened',
+E                       b'ent',
+E                       b'ep',
+E                       b'er',
+E                       b'ers',
+E                       b'es',
+E                       b'ess',
+E                       b'et',
+E                       b'etter',
+E                       b'ew',
+E                       b'ex',
+E                 -     b'expected',
+E                       b'f',
+E                       b'fe',
+E                       b'ff',
+E                 +     b'fore',
+E                       b'ft',
+E                       b'fter',
+E                       b'ful',
+E                       b'g',
+E                 +     b'gan',
+E                       b'ge',
+E                       b'ged',
+E                 +     b'ger',
+E                       b'get',
+E                       b'gether',
+E                       b'gry',
+E                       b'h',
+E                       b'he',
+E                       b'hed',
+E                       b'hen',
+E                       b'her',
+E                       b'here',
+E                       b'hes',
+E                       b'hing',
+E                       b'ht',
+E                       b'i',
+E                       b'ia',
+E                       b'ic',
+E                       b'ice',
+E                       b'ick',
+E                       b'id',
+E                       b'ide',
+E                       b'ided',
+E                       b'ie',
+E                       b'ies',
+E                       b'if',
+E                 +     b'iful',
+E                       b'ig',
+E                       b'ight',
+E                       b'il',
+E                       b'ild',
+E                       b'ile',
+E                       b'iled',
+E                       b'ill',
+E                 +     b'illy',
+E                       b'ily',
+E                       b'im',
+E                       b'imal',
+E                       b'ime',
+E                       b'in',
+E                       b'ind',
+E                       b'ine',
+E                       b'ing',
+E                       b'ings',
+E                       b'ink',
+E                       b'iny',
+E                       b'ion',
+E                       b'ip',
+E                       b'ir',
+E                       b'ird',
+E                 +     b'ired',
+E                 +     b'irrel',
+E                 +     b'irst',
+E                       b'is',
+E                       b'ise',
+E                       b'ised',
+E                       b'ish',
+E                 +     b'ished',
+E                 +     b'iss',
+E                       b'ist',
+E                       b'it',
+E                       b'ite',
+E                       b'ited',
+E                       b'ith',
+E                       b'itt',
+E                       b'ittle',
+E                       b'itty',
+E                       b'ive',
+E                       b'iz',
+E                       b'j',
+E                       b'k',
+E                       b'kay',
+E                       b'ke',
+E                       b'ked',
+E                       b'king',
+E                       b'l',
+E                       b'ld',
+E                       b'le',
+E                 +     b'lease',
+E                       b'les',
+E                       b'lew',
+E                       b'lf',
+E                       b'll',
+E                 +     b'luffy',
+E                       b'ly',
+E                       b'm',
+E                       b'more',
+E                       b'my',
+E                       b'n',
+E                       b'nd',
+E                       b'nder',
+E                       b'nn',
+E                       b'nna',
+E                       b'nt',
+E                       b'ny',
+E                       b'o',
+E                       b'ob',
+E                 +     b'ock',
+E                       b'og',
+E                 +     b'oh',
+E                 +     b'ohn',
+E                       b'om',
+E                       b'ome',
+E                       b'omet',
+E                       b'on',
+E                       b'one',
+E                       b'ong',
+E                       b'oo',
+E                       b'ood',
+E                       b'ook',
+E                       b'ool',
+E                 +     b'oon',
+E                       b'op',
+E                       b'ople',
+E                       b'or',
+E                       b'ore',
+E                       b'orn',
+E                       b'ort',
+E                       b'ot',
+E                       b'other',
+E                       b'ou',
+E                       b'oud',
+E                       b'oug',
+E                       b'ough',
+E                       b'ought',
+E                       b'ould',
+E                       b'ound',
+E                       b'our',
+E                       b'ous',
+E                       b'ouse',
+E                       b'out',
+E                       b'ow',
+E                 +     b'owl',
+E                       b'own',
+E                       b'oy',
+E                       b'p',
+E                       b'pec',
+E                       b'pected',
+E                       b'pl',
+E                       b'pot',
+E                       b'pp',
+E                       b'pped',
+E                       b'pr',
+E                 +     b'pt',
+E                       b'q',
+E                       b'qu',
+E                       b'r',
+E                       b'ra',
+E                 +     b'raw',
+E                       b're',
+E                 +     b'rel',
+E                       b'ret',
+E                       b'ri',
+E                       b'ried',
+E                       b'riend',
+E                       b'rm',
+E                       b'ro',
+E                       b'rom',
+E                       b'round',
+E                       b'ry',
+E                       b's',
+E                       b'se',
+E                 +     b'self',
+E                       b'side',
+E                 +     b'so',
+E                       b'ss',
+E                       b'st',
+E                       b't',
+E                       b'ted',
+E                       b'ter',
+E                 +     b'th',
+E                       b'ture',
+E                       b'ty',
+E                       b'u',
+E                       b'uc',
+E                       b'uch',
+E                       b'uck',
+E                       b'ucy',
+E                 +     b'ud',
+E                       b'udd',
+E                       b'udden',
+E                       b'uddenly',
+E                       b'ue',
+E                       b'uff',
+E                       b'uffy',
+E                       b'ug',
+E                       b'ul',
+E                       b'ull',
+E                       b'um',
+E                       b'ummy',
+E                       b'ump',
+E                       b'un',
+E                 +     b'unny',
+E                       b'ur',
+E                       b'ure',
+E                       b'urn',
+E                       b'urt',
+E                       b'us',
+E                       b'use',
+E                 +     b'ush',
+E                       b'ust',
+E                       b'ut',
+E                       b'v',
+E                       b've',
+E                       b'ved',
+E                       b'ven',
+E                 +     b'vent',
+E                       b'ver',
+E                       b'very',
+E                       b'ving',
+E                       b'w',
+E                       b'way',
+E                       b'ways',
+E                       b'x',
+E                       b'xt',
+E                       b'y',
+E                       b'z',
+E                       b'{',
+E                       b'|',
+E                       b'}',
+E                       b'~',
+E                       b'\x7f',
+E                 -     b'\x80',
+E                 -     b'\x81',
+E                 -     b'\x82',
+E                 -     b'\x83',
+E                 -     b'\x84',
+E                 -     b'\x85',
+E                 -     b'\x86',
+E                 -     b'\x87',
+E                 -     b'\x88',
+E                 -     b'\x89',
+E                 -     b'\x8a',
+E                 -     b'\x8b',
+E                 -     b'\x8c',
+E                 -     b'\x8d',
+E                 -     b'\x8e',
+E                 -     b'\x8f',
+E                 -     b'\x90',
+E                 -     b'\x91',
+E                 -     b'\x92',
+E                 -     b'\x93',
+E                 -     b'\x94',
+E                 -     b'\x95',
+E                 -     b'\x96',
+E                 -     b'\x97',
+E                 -     b'\x98',
+E                 -     b'\x99',
+E                 -     b'\x9a',
+E                 -     b'\x9b',
+E                 -     b'\x9c',
+E                 -     b'\x9d',
+E                 -     b'\x9e',
+E                 -     b'\x9f',
+E                 -     b'\xa0',
+E                 -     b'\xa1',
+E                 -     b'\xa2',
+E                 -     b'\xa3',
+E                 -     b'\xa4',
+E                 -     b'\xa5',
+E                 -     b'\xa6',
+E                 -     b'\xa7',
+E                 -     b'\xa8',
+E                 -     b'\xa9',
+E                 -     b'\xaa',
+E                 -     b'\xab',
+E                 -     b'\xac',
+E                 -     b'\xad',
+E                 -     b'\xae',
+E                 -     b'\xaf',
+E                 -     b'\xb0',
+E                 -     b'\xb1',
+E                 -     b'\xb2',
+E                 -     b'\xb3',
+E                 -     b'\xb4',
+E                 -     b'\xb5',
+E                 -     b'\xb6',
+E                 -     b'\xb7',
+E                 -     b'\xb8',
+E                 -     b'\xb9',
+E                 -     b'\xba',
+E                 -     b'\xbb',
+E                 -     b'\xbc',
+E                 -     b'\xbd',
+E                 -     b'\xbe',
+E                 -     b'\xbf',
+E                 -     b'\xc0',
+E                 -     b'\xc1',
+E                 -     b'\xc2',
+E                 -     b'\xc3',
+E                 -     b'\xc4',
+E                 -     b'\xc5',
+E                 -     b'\xc6',
+E                 -     b'\xc7',
+E                 -     b'\xc8',
+E                 -     b'\xc9',
+E                 -     b'\xca',
+E                 -     b'\xcb',
+E                 -     b'\xcc',
+E                 -     b'\xcd',
+E                 -     b'\xce',
+E                 -     b'\xcf',
+E                 -     b'\xd0',
+E                 -     b'\xd1',
+E                 -     b'\xd2',
+E                 -     b'\xd3',
+E                 -     b'\xd4',
+E                 -     b'\xd5',
+E                 -     b'\xd6',
+E                 -     b'\xd7',
+E                 -     b'\xd8',
+E                 -     b'\xd9',
+E                 -     b'\xda',
+E                 -     b'\xdb',
+E                 -     b'\xdc',
+E                 -     b'\xdd',
+E                 -     b'\xde',
+E                 -     b'\xdf',
+E                 -     b'\xe0',
+E                 -     b'\xe1',
+E                 -     b'\xe2',
+E                 -     b'\xe2\x80',
+E                 -     b'\xe3',
+E                 -     b'\xe4',
+E                 -     b'\xe5',
+E                 -     b'\xe6',
+E                 -     b'\xe7',
+E                 -     b'\xe8',
+E                 -     b'\xe9',
+E                 -     b'\xea',
+E                 -     b'\xeb',
+E                 -     b'\xec',
+E                 -     b'\xed',
+E                 -     b'\xee',
+E                 -     b'\xef',
+E                 -     b'\xf0',
+E                 -     b'\xf1',
+E                 -     b'\xf2',
+E                 -     b'\xf3',
+E                 -     b'\xf4',
+E                 -     b'\xf5',
+E                 -     b'\xf6',
+E                 -     b'\xf7',
+E                 -     b'\xf8',
+E                 -     b'\xf9',
+E                 -     b'\xfa',
+E                 -     b'\xfb',
+E                 -     b'\xfc',
+E                 -     b'\xfd',
+E                 -     b'\xfe',
+E                 -     b'\xff',
+E                   }
+
+tests/conftest.py:119: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_train_bpe.py::test_train_bpe - AssertionError: assert [(b' ', b't'), (b' ', b'a'), (b'h', b'e'), (b'i', b'n'), (b' t', b'he'), (b'r', b'e'), (b' ', b'o'), (b' ', b','), (b'e', b'r'), (b' ', b's'), (b'a', b't'), (b' ', b'.'), (b'n', b'd'), (b'i', b's'), (b'o', b'r'), (b' ', b'w'), (b' ', b'c'), (b'o', b'n'), (b' ', b'b'), (b' ', b'f'), (b'o', b'u'), (b'i', b't'), (b'e', b'n'), (b'e', b's'), (b' o', b'f'), (b' ', b'p'), (b'in', b'g'), (b' ', b'in'), (b'e', b'd'), (b'a', b'l'), (b' ', b'm'), (b' ', b'd'), (b' a', b'nd'), (b'a', b'n'), (b'a', b'r'), (b' t', b'o'), (b'o', b'm'), (b' t', b'h'), (b'i', b'c'), (b'i', b'on'), (b' ', b'h'), (b' ', b'l'), (b' ', b'y'), (b' ', b'e'), (b'a', b's'), (b'o', b't'), (b'i', b'l'), (b' ', b'n'), (b' ', b'u'), (b'en', b't'), (b' b', b'e'), (b' ', b'&'), (b' ', b'is'), (b' y', b'ou'), (b'o', b's'), (b' ', b're'), (b'e', b't'), (b' f', b'or'), (b'u', b't'), (b'e', b'l'), (b' ', b'g'), (b'a', b'y'), (b's', b't'), (b'o', b'w'), (b'c', b'e'), (b'l', b'e'), (b'a', b'd'), (b' o', b'n'), (b' ', b'I'), (b'v', b'e'), (b'v', b'er'), (b' ', b'A'), (b'u', b'r'), (b'o', b'l'), (b'c', b't'), (b'q', b'u'), (b' th', b'at'), (b'i', b'm'), (b'al', b'l'), (b'a', b'm'), (b'i', b'g'), (b'c', b'h'), (b'at', b'ion'), (b' ', b'P'), (b'it', b'h'), (b'i', b'r'), (b' ', b'S'), (b' ', b'it'), (b' p', b'r'), (b'a', b'p'), (b' ', b'C'), (b' s', b'h'), (b't', b'h'), (b' c', b'om'), (b' ', b'@'), (b' w', b'h'), (b'-', b'@'), (b' a', b're'), (b' @', b'-@'), (b'n', b't'), (b'i', b'd'), (b' w', b'ith'), (b' a', b'l'), (b'o', b'p'), (b' u', b's'), (b' a', b's'), (b'er', b's'), (b't', b'he'), (b'a', b'nd'), (b'i', b'f'), (b'or', b'd'), (b'o', b'd'), (b' ', b'he'), (b'is', b't'), (b'm', b'ent'), (b'qu', b'ot'), (b' ', b'M'), (b' o', b'r'), (b'o', b're'), (b' ', b'G'), (b' f', b'r'), (b'il', b'l'), (b're', b's'), (b' s', b't'), (b'es', b's'), (b'l', b'd'), (b' th', b'is'), (b' ', b'2'), (b' ', b';'), (b'ar', b't'), (b' ', b'L'), (b'l', b'y'), (b'a', b'in'), (b'u', b'l'), (b' c', b'on'), (b' d', b'e'), (b'es', b't'), (b's', b'e'), (b'a', b'g'), (b' a', b'n'), (b'ap', b'os'), (b' fr', b'om'), (b' w', b'e'), (b' ', b'('), (b'0', b'0'), (b' ', b'E'), (b't', b'er'), (b'e', b'm'), (b' n', b'ot'), (b'a', b've'), (b' ', b')'), (b' ', b'1'), (b' you', b'r'), (b'o', b'c'), (b' ', b'D'), (b' b', b'y'), (b' c', b'an'), (b' ', b'v'), (b' n', b'e'), (b'ic', b'h'), (b'ig', b'h'), (b' al', b'l'), (b' ', b'r'), (b' u', b'p'), (b'r', b'i'), (b' ', b'W'), (b'b', b'le'), (b' the', b'y'), (b' ', b'B'), (b'u', b'n'), (b' ', b'O'), (b' y', b'e'), (b' wh', b'ich'), (b'k', b'e'), (b' ', b'F'), (b' s', b'u'), (b' w', b'or'), (b' ', b'H'), (b' h', b'ave'), (b'at', b'e'), (b' c', b'h'), (b' sh', b'all'), (b'e', b'ct'), (b' s', b'p'), (b'it', b'y'), (b' com', b'p'), (b' w', b'ill'), (b'res', b's'), (b'igh', b't'), (b'or', b't'), (b'an', b't'), (b' &', b'#'), (b'.', b'.'), (b'a', b're'), (b'i', b've'), (b' e', b'x'), (b' A', b'nd'), (b' .', b'..'), (b' ', b'T'), (b'2', b'4'), (b'as', b't'), (b'ou', b'ld'), (b' t', b'r'), (b'v', b'en'), (b'l', b'u'), (b'u', b'm'), (b' s', b'e'), (b'ou', b't'), (b'c', b'om'), (b' u', b'nt'), (b'f', b't'), (b'l', b'o'), (b'i', b'z'), (b're', b'e'), (b'is', b'h'), (b'ion', b's'), (b'os', b't'), (b' pr', b'o'), (b'1', b'24'), (b' unt', b'o'), (b'm', b'er'), (b' a', b'c'), (b'ing', b's'), (b'a', b'c'), (b'at', b'ed'), (b'th', b'is'), (b'e', b're'), (b' m', b'an'), (b'u', b'st'), (b' a', b't'), (b'f', b'or'), (b' m', b'y'), (b'i', b'es'), (b'ag', b'e'), (b'r', b'ou'), (b'an', b's'), (b'p', b'p'), (b'in', b'd'), (b' wor', b'k'), (b'he', b're'), (b' s', b'it'), (b'f', b'ore'), (b' ', b'k'), (b' ', b'ver'), (b'u', b's'), (b'as', b'e'), (b' 2', b'00'), (b'P', b'ress'), (b'f', b'f'), (b' ', b'j'), (b'he', b'r'), (b'ow', b'n'), (b' the', b'ir'), (b'ment', b's'), (b'r', b'a'), (b' G', b'od'), (b'o', b'k'), (b' ', b'-'), (b' ', b'R'), (b'in', b'e'), (b'at', b'a'), (b'ar', b'd'), (b'ar', b'k'), (b'ic', b'e'), (b' on', b'e'), (b'i', b'v'), (b' ', b'N'), (b'c', b'at'), (b' p', b'l'), (b' w', b'as'), (b'b', b'ut'), (b' con', b't'), (b'e', b'p'), (b't', b'o'), (b' a', b'b'), (b' ', b'im'), (b' ', b'!'), (b'p', b't'), (b'p', b'en'), (b' h', b'is'), (b'the', b'r'), (b'i', b'a'), (b'C', b'E'), (b' the', b're'), (b' s', b'o'), (b'CE', b'cat'), (b're', b'at'), (b'or', b's'), (b' h', b'as'), (b' f', b'il'), (b'am', b'e'), (b' ', b'if'), (b'lo', b'ad'), (b' sit', b'es'), (b'ri', b'but'), (b' I', b'CEcat'), (b' l', b'e'), (b'el', b'l'), (b'com', b'mer'), (b' d', b'ata'), (b's', b'o'), (b'b', b'l'), (b' ', b'6'), (b' ', b':'), (b' the', b'm'), (b' m', b'e'), (b' t', b'im'), (b' ne', b'w'), (b'a', b'ble'), (b' e', b'commer'), (b' ecommer', b'ce'), (b'ou', b's'), (b' g', b'o'), (b' S', b'p'), (b' e', b'ven'), (b' ac', b'c'), (b' m', b'ay'), (b'i', b'e'), (b'o', b'g'), (b' a', b'r'), (b'ic', b't'), (b'y', b'st'), (b'ol', b'd'), (b'yst', b'em'), (b' d', b'o'), (b'om', b'e'), (b'os', b'e'), (b' d', b'ist'), (b'a', b'ke'), (b' d', b'own'), (b' ', b'J'), (b'i', b'al'), (b'ar', b'y'), (b'a', b'il'), (b'in', b'ce'), (b' o', b'ur'), (b' us', b'ing'), (b'for', b'm'), (b'g', b'h'), (b'on', b'e'), (b' b', b'ut'), (b' com', b'm'), (b' m', b'ore'), (b' f', b'ree'), (b' o', b'ther'), (b' s', b'ystem'), (b' in', b'c'), (b' o', b'ut'), (b'a', b'ch'), (b' l', b'and'), (b' k', b'n'), (b' dist', b'ribut'), (b'ou', b'r'), (b'ic', b'en'), (b'here', b'fore'), (b' tim', b'e'), (b'n', b'g'), (b'a', b'k'), (b'er', b'm'), (b' s', b'er'), (b'on', b'g'), (b' of', b'f'), (b' p', b'e'), (b'n', b'ing'), (b'as', b'ed'), (b' p', b'ur'), (b' p', b'art'), (b' we', b're'), (b' ab', b'out'), (b'a', b'v'), (b' th', b'ou')] == [(b' ', b't'), (b' ', b'a'), (b'h', b'e'), (b'i', b'n'), (b' t', b'he'), (b'r', b'e'), (b' ', b'o'), (b' ', b','), (b'e', b'r'), (b' ', b's'), (b'a', b't'), (b' ', b'.'), (b'n', b'd'), (b'i', b's'), (b'o', b'r'), (b' ', b'w'), (b' ', b'c'), (b'o', b'n'), (b' ', b'b'), (b' ', b'f'), (b'o', b'u'), (b'i', b't'), (b'e', b'n'), (b'e', b's'), (b' o', b'f'), (b' ', b'p'), (b'in', b'g'), (b' ', b'in'), (b'e', b'd'), (b'a', b'l'), (b' ', b'm'), (b' a', b'nd'), (b' ', b'd'), (b'a', b'n'), (b'a', b'r'), (b' t', b'o'), (b'o', b'm'), (b' t', b'h'), (b'i', b'c'), (b'i', b'on'), (b' ', b'h'), (b' ', b'l'), (b' ', b'y'), (b' ', b'e'), (b'a', b's'), (b'o', b't'), (b'i', b'l'), (b' ', b'n'), (b' ', b'u'), (b'en', b't'), (b' b', b'e'), (b' ', b'&'), (b' ', b'is'), (b' y', b'ou'), (b'o', b's'), (b' ', b're'), (b'e', b't'), (b' f', b'or'), (b'u', b't'), (b'e', b'l'), (b' ', b'g'), (b'a', b'y'), (b's', b't'), (b'o', b'w'), (b'l', b'e'), (b'c', b'e'), (b'a', b'd'), (b' o', b'n'), (b' ', b'I'), (b'v', b'er'), (b'v', b'e'), (b' ', b'A'), (b'u', b'r'), (b'o', b'l'), (b'c', b't'), (b'q', b'u'), (b' th', b'at'), (b'i', b'm'), (b'al', b'l'), (b'a', b'm'), (b'i', b'g'), (b'c', b'h'), (b'at', b'ion'), (b' ', b'P'), (b'it', b'h'), (b'i', b'r'), (b' ', b'S'), (b' ', b'it'), (b' p', b'r'), (b'a', b'p'), (b' s', b'h'), (b' ', b'C'), (b't', b'h'), (b' c', b'om'), (b' ', b'@'), (b' w', b'h'), (b'-', b'@'), (b' a', b're'), (b' @', b'-@'), (b'n', b't'), (b'i', b'd'), (b' w', b'ith'), (b' a', b'l'), (b'o', b'p'), (b' u', b's'), (b'er', b's'), (b' a', b's'), (b't', b'he'), (b'a', b'nd'), (b'i', b'f'), (b'or', b'd'), (b'o', b'd'), (b' ', b'he'), (b'is', b't'), (b'qu', b'ot'), (b'm', b'ent'), (b' ', b'M'), (b' o', b'r'), (b'o', b're'), (b' ', b'G'), (b' f', b'r'), (b'il', b'l'), (b're', b's'), (b' s', b't'), (b'es', b's'), (b'l', b'd'), (b' th', b'is'), (b' ', b'2'), (b'ar', b't'), (b' ', b';'), (b' ', b'L'), (b'l', b'y'), (b'a', b'in'), (b'u', b'l'), (b' d', b'e'), (b' c', b'on'), (b'es', b't'), (b's', b'e'), (b'ap', b'os'), (b'a', b'g'), (b' fr', b'om'), (b' a', b'n'), (b' w', b'e'), (b' ', b'('), (b'0', b'0'), (b't', b'er'), (b' ', b'E'), (b'e', b'm'), (b'a', b've'), (b' n', b'ot'), (b' ', b')'), (b' ', b'1'), (b' you', b'r'), (b'o', b'c'), (b' c', b'an'), (b' b', b'y'), (b' ', b'D'), (b' n', b'e'), (b' ', b'v'), (b'ig', b'h'), (b'ic', b'h'), (b' al', b'l'), (b'r', b'i'), (b' u', b'p'), (b' ', b'r'), (b' ', b'W'), (b'b', b'le'), (b' the', b'y'), (b' ', b'B'), (b'u', b'n'), (b' y', b'e'), (b' wh', b'ich'), (b' ', b'O'), (b'k', b'e'), (b' w', b'or'), (b' s', b'u'), (b' ', b'F'), (b' ', b'H'), (b' h', b'ave'), (b'at', b'e'), (b' sh', b'all'), (b' c', b'h'), (b'e', b'ct'), (b'it', b'y'), (b' s', b'p'), (b'res', b's'), (b'igh', b't'), (b' w', b'ill'), (b' com', b'p'), (b'or', b't'), (b'an', b't'), (b' &', b'#'), (b'i', b've'), (b'a', b're'), (b'.', b'.'), (b' e', b'x'), (b' A', b'nd'), (b' .', b'..'), (b'as', b't'), (b'2', b'4'), (b' ', b'T'), (b'ou', b'ld'), (b'v', b'en'), (b' t', b'r'), (b'u', b'st'), (b'u', b'm'), (b'ou', b't'), (b'c', b'om'), (b' u', b'nt'), (b' s', b'e'), (b'f', b't'), (b're', b'e'), (b'os', b't'), (b'o', b'g'), (b'is', b'h'), (b'ion', b's'), (b'i', b'z'), (b'1', b'24'), (b' unt', b'o'), (b'm', b'er'), (b'ing', b's'), (b' a', b'c'), (b'th', b'is'), (b'at', b'ed'), (b'a', b'c'), (b'l', b'u'), (b'e', b're'), (b' m', b'an'), (b'f', b'or'), (b' m', b'y'), (b' a', b't'), (b'i', b'es'), (b'ag', b'e'), (b'r', b'ou'), (b'l', b'o'), (b'an', b's'), (b'p', b'p'), (b'in', b'd'), (b' wor', b'k'), (b'he', b're'), (b'f', b'ore'), (b' s', b'it'), (b' ', b'ver')]
+  
+  At index 31 diff: (b' ', b'd') != (b' a', b'nd')
+  Left contains 128 more items, first extra item: (b' ', b'ver')
+  
+  Full diff:
+    [
+        (
+            b' ',
+            b't',
+        ),
+        (
+            b' ',
+            b'a',
+        ),
+        (
+            b'h',
+            b'e',
+        ),
+        (
+            b'i',
+            b'n',
+        ),
+        (
+            b' t',
+            b'he',
+        ),
+        (
+            b'r',
+            b'e',
+        ),
+        (
+            b' ',
+            b'o',
+        ),
+        (
+            b' ',
+            b',',
+        ),
+        (
+            b'e',
+            b'r',
+        ),
+        (
+            b' ',
+            b's',
+        ),
+        (
+            b'a',
+            b't',
+        ),
+        (
+            b' ',
+            b'.',
+        ),
+        (
+            b'n',
+            b'd',
+        ),
+        (
+            b'i',
+            b's',
+        ),
+        (
+            b'o',
+            b'r',
+        ),
+        (
+            b' ',
+            b'w',
+        ),
+        (
+            b' ',
+            b'c',
+        ),
+        (
+            b'o',
+            b'n',
+        ),
+        (
+            b' ',
+            b'b',
+        ),
+        (
+            b' ',
+            b'f',
+        ),
+        (
+            b'o',
+            b'u',
+        ),
+        (
+            b'i',
+            b't',
+        ),
+        (
+            b'e',
+            b'n',
+        ),
+        (
+            b'e',
+            b's',
+        ),
+        (
+            b' o',
+            b'f',
+        ),
+        (
+            b' ',
+            b'p',
+        ),
+        (
+            b'in',
+            b'g',
+        ),
+        (
+            b' ',
+            b'in',
+        ),
+        (
+            b'e',
+            b'd',
+        ),
+        (
+            b'a',
+            b'l',
+        ),
+        (
+            b' ',
+            b'm',
+        ),
+        (
+  +         b' ',
+  +         b'd',
+  +     ),
+  +     (
+            b' a',
+            b'nd',
+        ),
+        (
+  -         b' ',
+  -         b'd',
+  -     ),
+  -     (
+            b'a',
+            b'n',
+        ),
+        (
+            b'a',
+            b'r',
+        ),
+        (
+            b' t',
+            b'o',
+        ),
+        (
+            b'o',
+            b'm',
+        ),
+        (
+            b' t',
+            b'h',
+        ),
+        (
+            b'i',
+            b'c',
+        ),
+        (
+            b'i',
+            b'on',
+        ),
+        (
+            b' ',
+            b'h',
+        ),
+        (
+            b' ',
+            b'l',
+        ),
+        (
+            b' ',
+            b'y',
+        ),
+        (
+            b' ',
+            b'e',
+        ),
+        (
+            b'a',
+            b's',
+        ),
+        (
+            b'o',
+            b't',
+        ),
+        (
+            b'i',
+            b'l',
+        ),
+        (
+            b' ',
+            b'n',
+        ),
+        (
+            b' ',
+            b'u',
+        ),
+        (
+            b'en',
+            b't',
+        ),
+        (
+            b' b',
+            b'e',
+        ),
+        (
+            b' ',
+            b'&',
+        ),
+        (
+            b' ',
+            b'is',
+        ),
+        (
+            b' y',
+            b'ou',
+        ),
+        (
+            b'o',
+            b's',
+        ),
+        (
+            b' ',
+            b're',
+        ),
+        (
+            b'e',
+            b't',
+        ),
+        (
+            b' f',
+            b'or',
+        ),
+        (
+            b'u',
+            b't',
+        ),
+        (
+            b'e',
+            b'l',
+        ),
+        (
+            b' ',
+            b'g',
+        ),
+        (
+            b'a',
+            b'y',
+        ),
+        (
+            b's',
+            b't',
+        ),
+        (
+            b'o',
+            b'w',
+        ),
+        (
+  -         b'l',
+  -         b'e',
+  -     ),
+  -     (
+            b'c',
+  +         b'e',
+  +     ),
+  +     (
+  +         b'l',
+            b'e',
+        ),
+        (
+            b'a',
+            b'd',
+        ),
+        (
+            b' o',
+            b'n',
+        ),
+        (
+            b' ',
+            b'I',
+        ),
+        (
+            b'v',
+  +         b'e',
+  +     ),
+  +     (
+  +         b'v',
+            b'er',
+  -     ),
+  -     (
+  -         b'v',
+  -         b'e',
+        ),
+        (
+            b' ',
+            b'A',
+        ),
+        (
+            b'u',
+            b'r',
+        ),
+        (
+            b'o',
+            b'l',
+        ),
+        (
+            b'c',
+            b't',
+        ),
+        (
+            b'q',
+            b'u',
+        ),
+        (
+            b' th',
+            b'at',
+        ),
+        (
+            b'i',
+            b'm',
+        ),
+        (
+            b'al',
+            b'l',
+        ),
+        (
+            b'a',
+            b'm',
+        ),
+        (
+            b'i',
+            b'g',
+        ),
+        (
+            b'c',
+            b'h',
+        ),
+        (
+            b'at',
+            b'ion',
+        ),
+        (
+            b' ',
+            b'P',
+        ),
+        (
+            b'it',
+            b'h',
+        ),
+        (
+            b'i',
+            b'r',
+        ),
+        (
+            b' ',
+            b'S',
+        ),
+        (
+            b' ',
+            b'it',
+        ),
+        (
+            b' p',
+            b'r',
+        ),
+        (
+            b'a',
+            b'p',
+        ),
+        (
+  +         b' ',
+  +         b'C',
+  +     ),
+  +     (
+            b' s',
+            b'h',
+        ),
+        (
+  -         b' ',
+  -         b'C',
+  -     ),
+  -     (
+            b't',
+            b'h',
+        ),
+        (
+            b' c',
+            b'om',
+        ),
+        (
+            b' ',
+            b'@',
+        ),
+        (
+            b' w',
+            b'h',
+        ),
+        (
+            b'-',
+            b'@',
+        ),
+        (
+            b' a',
+            b're',
+        ),
+        (
+            b' @',
+            b'-@',
+        ),
+        (
+            b'n',
+            b't',
+        ),
+        (
+            b'i',
+            b'd',
+        ),
+        (
+            b' w',
+            b'ith',
+        ),
+        (
+            b' a',
+            b'l',
+        ),
+        (
+            b'o',
+            b'p',
+        ),
+        (
+            b' u',
+            b's',
+        ),
+        (
+  +         b' a',
+  +         b's',
+  +     ),
+  +     (
+            b'er',
+  -         b's',
+  -     ),
+  -     (
+  -         b' a',
+            b's',
+        ),
+        (
+            b't',
+            b'he',
+        ),
+        (
+            b'a',
+            b'nd',
+        ),
+        (
+            b'i',
+            b'f',
+        ),
+        (
+            b'or',
+            b'd',
+        ),
+        (
+            b'o',
+            b'd',
+        ),
+        (
+            b' ',
+            b'he',
+        ),
+        (
+            b'is',
+            b't',
+        ),
+        (
+  +         b'm',
+  +         b'ent',
+  +     ),
+  +     (
+            b'qu',
+            b'ot',
+        ),
+        (
+  -         b'm',
+  -         b'ent',
+  -     ),
+  -     (
+            b' ',
+            b'M',
+        ),
+        (
+            b' o',
+            b'r',
+        ),
+        (
+            b'o',
+            b're',
+        ),
+        (
+            b' ',
+            b'G',
+        ),
+        (
+            b' f',
+            b'r',
+        ),
+        (
+            b'il',
+            b'l',
+        ),
+        (
+            b're',
+            b's',
+        ),
+        (
+            b' s',
+            b't',
+        ),
+        (
+            b'es',
+            b's',
+        ),
+        (
+            b'l',
+            b'd',
+        ),
+        (
+            b' th',
+            b'is',
+        ),
+        (
+            b' ',
+            b'2',
+        ),
+        (
+  +         b' ',
+  +         b';',
+  +     ),
+  +     (
+            b'ar',
+            b't',
+        ),
+        (
+            b' ',
+  -         b';',
+  -     ),
+  -     (
+  -         b' ',
+            b'L',
+        ),
+        (
+            b'l',
+            b'y',
+        ),
+        (
+            b'a',
+            b'in',
+        ),
+        (
+            b'u',
+            b'l',
+  -     ),
+  -     (
+  -         b' d',
+  -         b'e',
+        ),
+        (
+            b' c',
+            b'on',
+        ),
+        (
+  +         b' d',
+  +         b'e',
+  +     ),
+  +     (
+            b'es',
+            b't',
+        ),
+        (
+            b's',
+            b'e',
+  +     ),
+  +     (
+  +         b'a',
+  +         b'g',
+  +     ),
+  +     (
+  +         b' a',
+  +         b'n',
+        ),
+        (
+            b'ap',
+            b'os',
+        ),
+        (
+  -         b'a',
+  -         b'g',
+  -     ),
+  -     (
+            b' fr',
+            b'om',
+        ),
+        (
+  -         b' a',
+  -         b'n',
+  -     ),
+  -     (
+            b' w',
+            b'e',
+        ),
+        (
+            b' ',
+            b'(',
+        ),
+        (
+            b'0',
+            b'0',
+        ),
+        (
+  +         b' ',
+  +         b'E',
+  +     ),
+  +     (
+            b't',
+            b'er',
+        ),
+        (
+  -         b' ',
+  -         b'E',
+  -     ),
+  -     (
+            b'e',
+            b'm',
+  -     ),
+  -     (
+  -         b'a',
+  -         b've',
+        ),
+        (
+            b' n',
+            b'ot',
+        ),
+        (
+  +         b'a',
+  +         b've',
+  +     ),
+  +     (
+            b' ',
+            b')',
+        ),
+        (
+            b' ',
+            b'1',
+        ),
+        (
+            b' you',
+            b'r',
+        ),
+        (
+            b'o',
+            b'c',
+  +     ),
+  +     (
+  +         b' ',
+  +         b'D',
+  +     ),
+  +     (
+  +         b' b',
+  +         b'y',
+        ),
+        (
+            b' c',
+            b'an',
+        ),
+        (
+  -         b' b',
+  ?            -
+  +         b' ',
+  -         b'y',
+  ?           ^
+  +         b'v',
+  ?           ^
+  -     ),
+  -     (
+  -         b' ',
+  -         b'D',
+        ),
+        (
+            b' n',
+            b'e',
+        ),
+        (
+  +         b'ic',
+  -         b' ',
+  ?           ^
+  +         b'h',
+  ?           ^
+  -         b'v',
+        ),
+        (
+            b'ig',
+            b'h',
+        ),
+        (
+  -         b'ic',
+  -         b'h',
+  -     ),
+  -     (
+            b' al',
+            b'l',
+        ),
+        (
+  -         b'r',
+  ?           ^
+  +         b' ',
+  ?           ^
+  -         b'i',
+  ?           ^
+  +         b'r',
+  ?           ^
+        ),
+        (
+            b' u',
+            b'p',
+        ),
+        (
+  -         b' ',
+  ?           ^
+  +         b'r',
+  ?           ^
+  -         b'r',
+  ?           ^
+  +         b'i',
+  ?           ^
+        ),
+        (
+            b' ',
+            b'W',
+        ),
+        (
+            b'b',
+            b'le',
+        ),
+        (
+            b' the',
+            b'y',
+        ),
+        (
+            b' ',
+            b'B',
+        ),
+        (
+            b'u',
+            b'n',
+        ),
+        (
+  +         b' ',
+  +         b'O',
+  +     ),
+  +     (
+            b' y',
+            b'e',
+        ),
+        (
+            b' wh',
+            b'ich',
+        ),
+        (
+  -         b' ',
+  -         b'O',
+  -     ),
+  -     (
+            b'k',
+            b'e',
+  +     ),
+  +     (
+  +         b' ',
+  +         b'F',
+  +     ),
+  +     (
+  +         b' s',
+  +         b'u',
+        ),
+        (
+            b' w',
+            b'or',
+        ),
+        (
+  -         b' s',
+  -         b'u',
+  -     ),
+  -     (
+  -         b' ',
+  -         b'F',
+  -     ),
+  -     (
+            b' ',
+            b'H',
+        ),
+        (
+            b' h',
+            b'ave',
+        ),
+        (
+            b'at',
+            b'e',
+        ),
+        (
+  +         b' c',
+  +         b'h',
+  +     ),
+  +     (
+            b' sh',
+            b'all',
+        ),
+        (
+  -         b' c',
+  -         b'h',
+  -     ),
+  -     (
+            b'e',
+            b'ct',
+  +     ),
+  +     (
+  +         b' s',
+  +         b'p',
+        ),
+        (
+            b'it',
+            b'y',
+        ),
+        (
+  -         b' s',
+  ?            ^
+  +         b' com',
+  ?            ^^^
+            b'p',
+  -     ),
+  -     (
+  -         b'res',
+  -         b's',
+  -     ),
+  -     (
+  -         b'igh',
+  -         b't',
+        ),
+        (
+            b' w',
+            b'ill',
+        ),
+        (
+  -         b' com',
+  ?           ^^^^
+  +         b'res',
+  ?           ^^^
+  -         b'p',
+  ?           ^
+  +         b's',
+  ?           ^
+  +     ),
+  +     (
+  +         b'igh',
+  +         b't',
+        ),
+        (
+            b'or',
+            b't',
+        ),
+        (
+            b'an',
+            b't',
+        ),
+        (
+            b' &',
+            b'#',
+        ),
+        (
+  -         b'i',
+  -         b've',
+  -     ),
+  -     (
+  -         b'a',
+  -         b're',
+  -     ),
+  -     (
+            b'.',
+            b'.',
+        ),
+        (
+  +         b'a',
+  +         b're',
+  +     ),
+  +     (
+  +         b'i',
+  +         b've',
+  +     ),
+  +     (
+            b' e',
+            b'x',
+        ),
+        (
+            b' A',
+            b'nd',
+        ),
+        (
+            b' .',
+            b'..',
+        ),
+        (
+  -         b'as',
+  -         b't',
+  ?           ^
+  +         b' ',
+  ?           ^
+  +         b'T',
+        ),
+        (
+            b'2',
+            b'4',
+        ),
+        (
+  +         b'as',
+  -         b' ',
+  ?           ^
+  +         b't',
+  ?           ^
+  -         b'T',
+        ),
+        (
+            b'ou',
+            b'ld',
+        ),
+        (
+  +         b' t',
+  +         b'r',
+  +     ),
+  +     (
+            b'v',
+            b'en',
+        ),
+        (
+  +         b'l',
+  +         b'u',
+  +     ),
+  +     (
+  +         b'u',
+  +         b'm',
+  +     ),
+  +     (
+  +         b' s',
+  +         b'e',
+  +     ),
+  +     (
+  +         b'ou',
+  -         b' t',
+  ?           -
+  +         b't',
+  +     ),
+  +     (
+  +         b'c',
+  +         b'om',
+  +     ),
+  +     (
+  +         b' u',
+  +         b'nt',
+  +     ),
+  +     (
+  +         b'f',
+  +         b't',
+  +     ),
+  +     (
+  +         b'l',
+  +         b'o',
+  +     ),
+  +     (
+  +         b'i',
+  +         b'z',
+  +     ),
+  +     (
+  -         b'r',
+  +         b're',
+  ?            +
+  +         b'e',
+  +     ),
+  +     (
+  +         b'is',
+  +         b'h',
+  +     ),
+  +     (
+  +         b'ion',
+  +         b's',
+  +     ),
+  +     (
+  +         b'os',
+  +         b't',
+  +     ),
+  +     (
+  +         b' pr',
+  +         b'o',
+  +     ),
+  +     (
+  +         b'1',
+  +         b'24',
+  +     ),
+  +     (
+  +         b' unt',
+  +         b'o',
+  +     ),
+  +     (
+  +         b'm',
+  +         b'er',
+  +     ),
+  +     (
+  +         b' a',
+  +         b'c',
+  +     ),
+  +     (
+  +         b'ing',
+  +         b's',
+  +     ),
+  +     (
+  +         b'a',
+  +         b'c',
+  +     ),
+  +     (
+  +         b'at',
+  +         b'ed',
+  +     ),
+  +     (
+  +         b'th',
+  +         b'is',
+  +     ),
+  +     (
+  +         b'e',
+  +         b're',
+  +     ),
+  +     (
+  +         b' m',
+  +         b'an',
+        ),
+        (
+            b'u',
+            b'st',
+        ),
+        (
+  -         b'u',
+  -         b'm',
+  -     ),
+  -     (
+  -         b'ou',
+  -         b't',
+  -     ),
+  -     (
+  -         b'c',
+  -         b'om',
+  -     ),
+  -     (
+  -         b' u',
+  -         b'nt',
+  -     ),
+  -     (
+  -         b' s',
+  -         b'e',
+  -     ),
+  -     (
+  -         b'f',
+  -         b't',
+  -     ),
+  -     (
+  -         b're',
+  -         b'e',
+  -     ),
+  -     (
+  -         b'os',
+  -         b't',
+  -     ),
+  -     (
+  -         b'o',
+  -         b'g',
+  -     ),
+  -     (
+  -         b'is',
+  -         b'h',
+  -     ),
+  -     (
+  -         b'ion',
+  -         b's',
+  -     ),
+  -     (
+  -         b'i',
+  -         b'z',
+  -     ),
+  -     (
+  -         b'1',
+  -         b'24',
+  -     ),
+  -     (
+  -         b' unt',
+  -         b'o',
+  -     ),
+  -     (
+  -         b'm',
+  -         b'er',
+  -     ),
+  -     (
+  -         b'ing',
+  -         b's',
+  -     ),
+  -     (
+            b' a',
+  -         b'c',
+  -     ),
+  -     (
+  -         b'th',
+  ?            -
+  +         b't',
+  -         b'is',
+  -     ),
+  -     (
+  -         b'at',
+  -         b'ed',
+  -     ),
+  -     (
+  -         b'a',
+  -         b'c',
+  -     ),
+  -     (
+  -         b'l',
+  -         b'u',
+  -     ),
+  -     (
+  -         b'e',
+  -         b're',
+  -     ),
+  -     (
+  -         b' m',
+  -         b'an',
+        ),
+        (
+            b'f',
+            b'or',
+        ),
+        (
+            b' m',
+            b'y',
+        ),
+        (
+  -         b' a',
+  -         b't',
+  -     ),
+  -     (
+            b'i',
+            b'es',
+        ),
+        (
+            b'ag',
+            b'e',
+        ),
+        (
+            b'r',
+            b'ou',
+  -     ),
+  -     (
+  -         b'l',
+  -         b'o',
+        ),
+        (
+            b'an',
+            b's',
+        ),
+        (
+            b'p',
+            b'p',
+        ),
+        (
+            b'in',
+            b'd',
+        ),
+        (
+            b' wor',
+            b'k',
+        ),
+        (
+            b'he',
+            b're',
+        ),
+        (
+  +         b' s',
+  +         b'it',
+  +     ),
+  +     (
+            b'f',
+            b'ore',
+        ),
+        (
+  +         b' ',
+  +         b'k',
+  +     ),
+  +     (
+  +         b' ',
+  +         b'ver',
+  +     ),
+  +     (
+  +         b'u',
+  +         b's',
+  +     ),
+  +     (
+  +         b'as',
+  +         b'e',
+  +     ),
+  +     (
+  +         b' 2',
+  +         b'00',
+  +     ),
+  +     (
+  +         b'P',
+  +         b'ress',
+  +     ),
+  +     (
+  +         b'f',
+  +         b'f',
+  +     ),
+  +     (
+  +         b' ',
+  +         b'j',
+  +     ),
+  +     (
+  +         b'he',
+  +         b'r',
+  +     ),
+  +     (
+  +         b'ow',
+  +         b'n',
+  +     ),
+  +     (
+  +         b' the',
+  +         b'ir',
+  +     ),
+  +     (
+  +         b'ment',
+  +         b's',
+  +     ),
+  +     (
+  +         b'r',
+  +         b'a',
+  +     ),
+  +     (
+  +         b' G',
+  +         b'od',
+  +     ),
+  +     (
+  +         b'o',
+  +         b'k',
+  +     ),
+  +     (
+  +         b' ',
+  +         b'-',
+  +     ),
+  +     (
+  +         b' ',
+  +         b'R',
+  +     ),
+  +     (
+  +         b'in',
+  +         b'e',
+  +     ),
+  +     (
+  +         b'at',
+  +         b'a',
+  +     ),
+  +     (
+  +         b'ar',
+  +         b'd',
+  +     ),
+  +     (
+  +         b'ar',
+  +         b'k',
+  +     ),
+  +     (
+  +         b'ic',
+  +         b'e',
+  +     ),
+  +     (
+  +         b' on',
+  +         b'e',
+  +     ),
+  +     (
+  +         b'i',
+  +         b'v',
+  +     ),
+  +     (
+  +         b' ',
+  +         b'N',
+  +     ),
+  +     (
+  +         b'c',
+  +         b'at',
+  +     ),
+  +     (
+  +         b' p',
+  +         b'l',
+  +     ),
+  +     (
+  +         b' w',
+  +         b'as',
+  +     ),
+  +     (
+  +         b'b',
+  +         b'ut',
+  +     ),
+  +     (
+  +         b' con',
+  +         b't',
+  +     ),
+  +     (
+  +         b'e',
+  +         b'p',
+  +     ),
+  +     (
+  +         b't',
+  +         b'o',
+  +     ),
+  +     (
+  +         b' a',
+  +         b'b',
+  +     ),
+  +     (
+  +         b' ',
+  +         b'im',
+  +     ),
+  +     (
+  +         b' ',
+  +         b'!',
+  +     ),
+  +     (
+  +         b'p',
+  +         b't',
+  +     ),
+  +     (
+  +         b'p',
+  +         b'en',
+  +     ),
+  +     (
+  +         b' h',
+  +         b'is',
+  +     ),
+  +     (
+  +         b'the',
+  +         b'r',
+  +     ),
+  +     (
+  +         b'i',
+  +         b'a',
+  +     ),
+  +     (
+  +         b'C',
+  +         b'E',
+  +     ),
+  +     (
+  +         b' the',
+  +         b're',
+  +     ),
+  +     (
+            b' s',
+  +         b'o',
+  +     ),
+  +     (
+  +         b'CE',
+  +         b'cat',
+  +     ),
+  +     (
+  +         b're',
+  +         b'at',
+  +     ),
+  +     (
+  +         b'or',
+  +         b's',
+  +     ),
+  +     (
+  +         b' h',
+  +         b'as',
+  +     ),
+  +     (
+  +         b' f',
+  +         b'il',
+  +     ),
+  +     (
+  +         b'am',
+  +         b'e',
+  +     ),
+  +     (
+  +         b' ',
+  +         b'if',
+  +     ),
+  +     (
+  +         b'lo',
+  +         b'ad',
+  +     ),
+  +     (
+  +         b' sit',
+  +         b'es',
+  +     ),
+  +     (
+  +         b'ri',
+  +         b'but',
+  +     ),
+  +     (
+  +         b' I',
+  +         b'CEcat',
+  +     ),
+  +     (
+  +         b' l',
+  +         b'e',
+  +     ),
+  +     (
+  +         b'el',
+  +         b'l',
+  +     ),
+  +     (
+  +         b'com',
+  +         b'mer',
+  +     ),
+  +     (
+  +         b' d',
+  +         b'ata',
+  +     ),
+  +     (
+  +         b's',
+  +         b'o',
+  +     ),
+  +     (
+  +         b'b',
+  +         b'l',
+  +     ),
+  +     (
+  +         b' ',
+  +         b'6',
+  +     ),
+  +     (
+  +         b' ',
+  +         b':',
+  +     ),
+  +     (
+  +         b' the',
+  +         b'm',
+  +     ),
+  +     (
+  +         b' m',
+  +         b'e',
+  +     ),
+  +     (
+  +         b' t',
+  +         b'im',
+  +     ),
+  +     (
+  +         b' ne',
+  +         b'w',
+  +     ),
+  +     (
+  +         b'a',
+  +         b'ble',
+  +     ),
+  +     (
+  +         b' e',
+  +         b'commer',
+  +     ),
+  +     (
+  +         b' ecommer',
+  +         b'ce',
+  +     ),
+  +     (
+  +         b'ou',
+  +         b's',
+  +     ),
+  +     (
+  +         b' g',
+  +         b'o',
+  +     ),
+  +     (
+  +         b' S',
+  +         b'p',
+  +     ),
+  +     (
+  +         b' e',
+  +         b'ven',
+  +     ),
+  +     (
+  +         b' ac',
+  +         b'c',
+  +     ),
+  +     (
+  +         b' m',
+  +         b'ay',
+  +     ),
+  +     (
+  +         b'i',
+  +         b'e',
+  +     ),
+  +     (
+  +         b'o',
+  +         b'g',
+  +     ),
+  +     (
+  +         b' a',
+  +         b'r',
+  +     ),
+  +     (
+  +         b'ic',
+  +         b't',
+  +     ),
+  +     (
+  +         b'y',
+  +         b'st',
+  +     ),
+  +     (
+  +         b'ol',
+  +         b'd',
+  +     ),
+  +     (
+  +         b'yst',
+  +         b'em',
+  +     ),
+  +     (
+  +         b' d',
+  +         b'o',
+  +     ),
+  +     (
+  +         b'om',
+  +         b'e',
+  +     ),
+  +     (
+  +         b'os',
+  +         b'e',
+  +     ),
+  +     (
+  +         b' d',
+  -         b'it',
+  +         b'ist',
+  ?            +
+        ),
+        (
+  +         b'a',
+  +         b'ke',
+  +     ),
+  +     (
+  -         b' ',
+  +         b' d',
+  ?            +
+  +         b'own',
+  +     ),
+  +     (
+  +         b' ',
+  +         b'J',
+  +     ),
+  +     (
+  +         b'i',
+  +         b'al',
+  +     ),
+  +     (
+  +         b'ar',
+  +         b'y',
+  +     ),
+  +     (
+  +         b'a',
+  +         b'il',
+  +     ),
+  +     (
+  +         b'in',
+  +         b'ce',
+  +     ),
+  +     (
+  +         b' o',
+  +         b'ur',
+  +     ),
+  +     (
+  +         b' us',
+  +         b'ing',
+  +     ),
+  +     (
+  +         b'for',
+  +         b'm',
+  +     ),
+  +     (
+  +         b'g',
+  +         b'h',
+  +     ),
+  +     (
+  +         b'on',
+  +         b'e',
+  +     ),
+  +     (
+  +         b' b',
+  +         b'ut',
+  +     ),
+  +     (
+  +         b' com',
+  +         b'm',
+  +     ),
+  +     (
+  +         b' m',
+  +         b'ore',
+  +     ),
+  +     (
+  +         b' f',
+  +         b'ree',
+  +     ),
+  +     (
+  +         b' o',
+  +         b'ther',
+  +     ),
+  +     (
+  +         b' s',
+  +         b'ystem',
+  +     ),
+  +     (
+  +         b' in',
+  +         b'c',
+  +     ),
+  +     (
+  +         b' o',
+  +         b'ut',
+  +     ),
+  +     (
+  +         b'a',
+  +         b'ch',
+  +     ),
+  +     (
+  +         b' l',
+  +         b'and',
+  +     ),
+  +     (
+  +         b' k',
+  +         b'n',
+  +     ),
+  +     (
+  +         b' dist',
+  +         b'ribut',
+  +     ),
+  +     (
+  +         b'ou',
+  +         b'r',
+  +     ),
+  +     (
+  +         b'ic',
+  +         b'en',
+  +     ),
+  +     (
+  +         b'here',
+  +         b'fore',
+  +     ),
+  +     (
+  +         b' tim',
+  +         b'e',
+  +     ),
+  +     (
+  +         b'n',
+  +         b'g',
+  +     ),
+  +     (
+  +         b'a',
+  +         b'k',
+  +     ),
+  +     (
+  -         b'ver',
+  ?           -
+  +         b'er',
+  +         b'm',
+  +     ),
+  +     (
+  +         b' s',
+  +         b'er',
+  +     ),
+  +     (
+  +         b'on',
+  +         b'g',
+  +     ),
+  +     (
+  +         b' of',
+  +         b'f',
+  +     ),
+  +     (
+  +         b' p',
+  +         b'e',
+  +     ),
+  +     (
+  +         b'n',
+  +         b'ing',
+  +     ),
+  +     (
+  +         b'as',
+  +         b'ed',
+  +     ),
+  +     (
+  +         b' p',
+  +         b'ur',
+  +     ),
+  +     (
+  +         b' p',
+  +         b'art',
+  +     ),
+  +     (
+  +         b' we',
+  +         b're',
+  +     ),
+  +     (
+  +         b' ab',
+  +         b'out',
+  +     ),
+  +     (
+  +         b'a',
+  +         b'v',
+  +     ),
+  +     (
+  +         b' th',
+  +         b'ou',
+        ),
+    ]
+FAILED tests/test_train_bpe.py::test_train_bpe_special_tokens - AssertionError: Data for key 'vocab_values' does not match snapshot for test_train_bpe_special_tokens
+assert {b' frog', b' didn', b' tried', b' his', b'The', b' rain', b' care', b' nodded', b' z', b' call', b' game', b' lots', b'No', b' fun', b' o', b' me', b' real', b'ri', b' beaut', b'way', b'\x01', b' jumped', b'vent', b' one', b'8', b'ay', b' thanked', b'rom', b'ways', b' po', b'udd', b' its', b'j', b'9', b'ht', b' sk', b' fly', b'ise', b' give', b' we', b'imal', b'\x00', b'\x0b', b'our', b' The', b' te', b'-', b'id', b' They', b' are', b'ist', b' park', b' pic', b' hand', b' de', b' le', b' love', b'ark', b'us', b'pr', b'Q', b' Th', b' ever', b' stopped', b' lo', b' just', b'A', b'As', b'(', b' fav', b'ger', b'ot', b'ouse', b' fin', b'at', b'ummy', b')', b'ig', b'ould', b' good', b' both', b'\t', b' nice', b'or', b'hed', b'hes', b' new', b' big', b' bird', b' speci', b'kay', b'iful', b' cook', b' work', b'itt', b' But', b'gether', b' unt', b'\x1c', b'king', b' hands', b' don', b'so', b'When', b' somet', b'ie', b' who', b'C', b'R', b'ool', b' sa', b' car', b' helped', b' Sue', b'dy', b' imp', b'a', b'nd', b' sky', b' gl', b' head', b'ady', b' st', b' an', b'/', b'if', b' s', b' to', b'end', b' learned', b' after', b' smiled', b' ta', b'\x0f', b'z', b'."', b' loud', b' each', b' ex', b's', b' fo', b'P', b' gard', b'ice', b' water', b' people', b' ag', b'gry', b' being', b'\n', b'here', b'ort', b' high', b' about', b' mean', b'my', b' did', b'ce', b'ked', b' im', b' should', b' tw', b' take', b'oy', b' also', b'irrel', b'Tom', b' mo', b' where', b' mon', b' bec', b' met', b' Mia', b'ile', b' many', b'oug', b'ong', b' fr', b' green', b'et', b' looked', b' wa', b'fter', b'ook', b'ause', b' at', b'x', b' got', b' too', b'ared', b' pie', b' when', b' cake', b'ant', b' int', b' hurt', b'H', b'M', b' scared', b'ving', b'\x7f', b'he', b'V', b' kind', b' make', b' gra', b'ull', b'orn', b' W', b'ven', b'\\', b' ab', b' until', b' named', b'oud', b' n', b'ar', b'ic', b'ty', b' bre', b'%', b'Th', b' yummy', b' sc', b'3', b'ade', b' When', b'uch', b' need', b'urt', b' keep', b'ear', b'p', b' clean', b' asked', b'en', b' kn', b'ck', b'h', b' bra', b' fl', b' r', b' started', b' say', b' her', b' will', b'more', b'ct', b'lf', b'*', b'am', b'ly', b' pret', b' rem', b' t', b' f', b' hat', b' dad', b' dre', b'\x0c', b' old', b' color', b'T', b'Can', b' p', b'\x04', b'?', b' sl', b' put', b'ided', b'iss', b' before', b'ace', b'E', b' And', b'^', b' felt', b'oon', b'\x16', b' so', b' together', b' C', b' ne', b'Tim', b' long', b' str', b' wind', b' way', b' have', b' kept', b' man', b'ip', b' things', b'ved', b' li', b' proud', b' playing', b'ink', b' Then', b' wait', b'$', b'@', b'|', b' for', b'ird', b' Sam', b' down', b' Sally', b' la', b' it', b' gave', b'ies', b'"', b'+', b'\x1d', b' friends', b' His', b'B', b' has', b' squ', b'rel', b'ited', b'\r', b'\x11', b' M', b'ime', b'ain', b'um', b'round', b' toys', b' were', b'uff', b' P', b' brave', b' book', b' heard', b' would', b' wal', b"'", b'Yes', b' dan', b' said', b' much', b' b', b' N', b' cre', b' happy', b' upon', b'ine', b' It', b'ome', b'Wh', b'get', b' excited', b' cle', b' and', b' tal', b' show', b' unex', b'ny', b'Y', b' You', b're', b'X', b' help', b'\x15', b' He', b' fe', b' Mom', b' g', b' am', b'ad', b' sand', b'ted', b' stor', b' surpr', b' h', b' sp', b' listen', b'6', b' Every', b'ure', b' bl', b' ho', b'<|endoftext|>', b'pl', b' sor', b' time', b' friend', b' I', b'ter', b' Spot', b'N', b'ith', b'S', b'st', b'ff', b't', b'ow', b' lot', b'ave', b' ch', b'ite', b'ard', b' run', b' We', b'g', b' of', b' fell', b' tra', b'be', b' but', b' always', b' best', b'\x1f', b' bad', b' v', b' took', b' Lily', b'on', b' fi', b' saw', b'nna', b' surprised', b'\x19', b'ut', b'J', b' something', b' Kitty', b'ane', b' flow', b'\x05', b' e', b' little', b' walked', b' hig', b'by', b'One', b' says', b'\x03', b' u', b' re', b'unny', b'I', b' wanted', b'They', b'rm', b'al', b'\x1b', b':', b'<', b'>', b'{', b' c', b' away', b' Anna', b'ue', b' safe', b'ohn', b'ough', b' mag', b' sm', b'[', b' hel', b' br', b' che', b'an', b'ew', b',"', b'iny', b' hugged', b' my', b'ound', b' door', b' play', b' slide', b' ran', b'im', b' co', b'4', b'_', b' She', b' more', b' come', b'ec', b' sw', b'itty', b'qu', b' hard', b'nder', b'5', b'\x13', b'U', b' go', b've', b' use', b' cou', b'ood', b' op', b' cat', b' wh', b' cl', b'Thank', b' over', b' ground', b' out', b' up', b' ey', b' walk', b'ab', b'ous', b' thought', b' From', b'ver', b' had', b'nt', b' F', b' laughed', b' soft', b' ca', b'ush', b' fix', b'dd', b' pr', b'iz', b' know', b' decided', b' room', b' Tim', b'He', b'ach', b' al', b'les', b'aut', b' Let', b'\x14', b'ber', b'as', b' pain', b' in', b' some', b' look', b'ild', b' tree', b'ed', b' happily', b'etter', b' stick', b' want', b' she', b'ld', b' dog', b' Amy', b' home', b'pp', b' he', b' story', b' noise', b'irst', b' nam', b' there', b' never', b'ried', b' open', b' ha', b'F', b'gan', b'ill', b'in', b'But', b'ock', b' see', b' lived', b' inside', b' Max', b'lew', b'iled', b'fore', b' clo', b'ack', b' In', b'em', b'You', b' us', b' as', b' thre', b' not', b'ia', b'uck', b' house', b' turn', b'udden', b'op', b' shiny', b' happened', b' get', b'ro', b' picked', b' A', b"'t", b'ent', b'!"', b' him', b' doll', b'ary', b'ess', b'are', b'ob', b';', b'nn', b' sh', b'L', b' toy', b'ss', b' fast', b' by', b' par', b' sorry', b'ick', b' th', b' en', b' how', b'It', b' do', b'self', b']', b' wor', b' sto', b'ate', b' tre', b'ings', b' beautiful', b' everyone', b' w', b' col', b'hing', b'b', b'u', b' exc', b'c', b' flew', b' share', b'ul', b' qu', b' rock', b'1', b'ally', b'out', b'pot', b'ump', b' Fluffy', b' special', b' block', b'le', b' H', b'ople', b' fam', b'e', b' played', b' family', b' while', b' animal', b'ame', b' bot', b'\x10', b' ad', b' that', b' went', b'lease', b' tow', b' strong', b' mom', b'.', b'Once', b'pected', b' blue', b'y', b'd', b'l', b'se', b' your', b' pretty', b'pt', b' leave', b'able', b' boy', b' magic', b'ge', b' ma', b'ished', b'f', b'll', b' wo', b'\n\n\n', b'ust', b'ex', b' ide', b'uc', b'riend', b'ight', b' pl', b' picture', b'}', b' D', b' what', b'\x1a', b'v', b'ought', b'Z', b'ide', b' made', b'w', b' sur', b'Mom', b'es', b' fish', b'o', b' One', b' them', b'ion', b' S', b'other', b'm', b' became', b' a', b' off', b' town', b' y', b' forest', b'0', b'ft', b' k', b' gre', b'D', b'xt', b'\x0e', b'ive', b'ank', b' their', b'Lily', b' list', b' fa', b' sing', b' rabbit', b'\x18', b'very', b' even', b' L', b'ax', b'ak', b' two', b' try', b'O', b' boat', b'ired', b' Lucy', b' day', b'ind', b'er', b' near', b'On', b' feel', b'eci', b' outside', b'uffy', b' around', b'ful', b' "', b' you', b' loved', b'ap', b'k', b'omet', b' watch', b' place', b' far', b' they', b' gr', b' j', b' other', b'side', b' bo', b' bro', b' find', b'!', b'`', b' then', b'raw', b' soon', b'7', b' than', b' knew', b' sun', b' under', b'\x06', b'G', b' Ben', b' unexpected', b' or', b' found', b'one', b'ittle', b' star', b'ag', b' com', b' l', b' told', b' end', b'&', b' next', b'Ben', b'pec', b' cu', b'un', b' liked', b'=', b' loo', b'is', b',', b' se', b'il', b'ing', b' small', b' app', b' is', b'\x12', b' store', b'\x17', b'\x08', b'ra', b' came', b'i', b' opened', b'ged', b'ched', b' yell', b' very', b'?"', b' un', b'\x1e', b"'m", b' can', b' now', b'illy', b'ake', b'her', b' idea', b' this', b' bug', b' laug', b'oh', b'th', b' girl', b' cry', b' B', b'ud', b' So', b' Tom', b'all', b'What', b'arn', b'luffy', b' anymore', b'ble', b'W', b'n', b' great', b' Now', b' flowers', b'ep', b'ke', b'\n\n', b' like', b' if', b'age', b'dded', b'ch', b' sad', b' jump', b' learn', b' clim', b' kid', b"'s", b'own', b' m', b'ers', b'og', b' Sara', b' face', b' having', b'ell', b' ke', b' all', b'abbit', b' hear', b' mommy', b' couldn', b' tired', b' pe', b'ret', b' food', b'hen', b'oo', b' stay', b' again', b' animals', b'bed', b' ate', b'ture', b'ase', b' okay', b'ou', b'om', b' E', b' clos', b' garden', b'pped', b'use', b' ball', b' hug', b'ry', b'~', b'That', b' the', b' with', b' Bob', b' box', b' J', b'fe', b' back', b' wat', b' bu', b'urn', b' sn', b' let', b'\x07', b' better', b' could', b' still', b' because', b' fore', b'ened', b'ur', b' into', b' K', b'Hi', b' no', b'el', b' ro', b' every', b' red', b' on', b' any', b' bear', b' eat', b'uddenly', b' smile', b' lost', b'ir', b'ish', b'ised', b' Wh', b' warm', b'\x02', b'Let', b'#', b' sat', b' was', b'ara', b'bit', b' tr', b' from', b' Her', b' showed', b'it', b'ug', b' gir', b' dec', b' called', b' ', b' pa', b'q', b'2', b' d', b' angry', b'ore', b' happ', b'Look', b'elt', b'K', b'ily', b'ucy', b'r', b'day', b'owl', b' careful', b' kids', b'and', b' be', b' T'} == {b' frog', b' didn', b' tried', b' his', b'The', b' care', b'\xe5', b' call', b' lots', b'No', b' fun', b' o', b' me', b'ri', b' beaut', b'way', b'\x01', b' jumped', b' one', b'ay', b'8', b' thanked', b'rom', b'\xe9', b'ways', b'udd', b' po', b' its', b'j', b'ht', b'9', b' fly', b' sk', b'ise', b' give', b' we', b'imal', b' te', b'\x0b', b'\x00', b'our', b' The', b'-', b' They', b'id', b'\xff', b' are', b'ist', b' hand', b' pic', b' park', b' love', b' le', b'us', b'ark', b' Th', b' ever', b'Q', b'pr', b' lo', b' just', b'A', b'As', b'(', b'\xe6', b'ot', b'ouse', b'at', b'ummy', b')', b'ig', b'ould', b' good', b' both', b'\t', b' nice', b'\x8e', b'or', b'\xf0', b'kay', b' big', b' new', b'hes', b' bird', b'hed', b'itt', b' But', b' unt', b'\x83', b'\xd0', b'\x1c', b'king', b'gether', b'\xa5', b' don', b' somet', b'\xc1', b'\xc8', b'\xb7', b'ie', b' who', b'ool', b'R', b'C', b' sa', b' car', b' helped', b'dy', b' Sue', b'a', b'nd', b' sky', b' gl', b'\x90', b'\xf7', b'ady', b' st', b' learned', b'/', b'if', b' s', b' to', b' an', b'end', b' after', b' smiled', b' ta', b'\x0f', b'\x93', b'z', b' loud', b'."', b' each', b' ex', b's', b' fo', b'\xd1', b'P', b'ice', b' water', b'\xa1', b' people', b' ag', b'gry', b'here', b'\n', b'ort', b' high', b' about', b'my', b' did', b'ce', b'ked', b'\xb6', b'oy', b' tw', b' take', b' should', b' im', b'Tom', b'\xd8', b' mo', b'\xeb', b' bec', b' met', b' Mia', b'ile', b' many', b'\xf1', b'oug', b'ong', b' fr', b'et', b' looked', b' wa', b'fter', b'ook', b'ause', b' at', b' got', b'x', b' too', b'ared', b' when', b'\xfb', b' cake', b'ant', b' hurt', b' int', b'H', b'\xee', b'M', b'ving', b'he', b'\x7f', b'\xc4', b'V', b' scared', b' kind', b'\xfa', b' make', b' gra', b'ull', b'orn', b' W', b'ven', b' ab', b'\\', b' until', b' named', b'oud', b'ic', b'ar', b' n', b'ty', b'%', b'\xd3', b'Th', b'\xa0', b' sc', b'3', b'ade', b' When', b' need', b'\xac', b'uch', b'urt', b'p', b' clean', b' asked', b'en', b' kn', b'\xf8', b'ck', b'h', b' fl', b' r', b' started', b' say', b' her', b' will', b'more', b'ct', b'lf', b'*', b'am', b'ly', b' pret', b' t', b' f', b' hat', b' dad', b' dre', b'\x0c', b'\x8d', b'\xab', b' old', b' color', b'T', b'Can', b'\x9e', b'\x04', b'?', b' sl', b' put', b'ided', b' p', b'ace', b'E', b' And', b'^', b' felt', b'\xb1', b' so', b'\x16', b' together', b'\x9b', b' ne', b' long', b'Tim', b'\xea', b' str', b' wind', b'\xc3', b' way', b'\xe7', b' have', b' man', b'ip', b' things', b'ved', b' li', b' Then', b'ink', b' playing', b' proud', b'\xb8', b'\xed', b'\xd9', b'@', b'$', b'|', b' for', b' Sam', b'ird', b' down', b' Sally', b'expected', b' la', b' it', b' gave', b'ies', b'"', b'+', b'\x1d', b' friends', b' His', b'B', b'\xcb', b' squ', b'ited', b'ain', b'ime', b'uff', b' M', b'um', b'round', b'\r', b'\x11', b' were', b'\xaa', b' P', b' toys', b' book', b'\x9c', b' heard', b' would', b' wal', b"'", b'\xb3', b'Yes', b' dan', b' much', b' N', b' b', b' said', b' happy', b'ine', b' upon', b' It', b'ome', b'Wh', b' tal', b' cle', b'get', b' excited', b' and', b' show', b'\x86', b'ny', b'Y', b' You', b'\xcd', b' help', b'X', b're', b'\x15', b' fe', b' Mom', b' He', b' g', b'\xe4', b' am', b'ad', b'ted', b' stor', b' surpr', b' sp', b' h', b'\xfe', b' listen', b'\xf4', b'6', b' Every', b'\x84', b' ho', b'ure', b' bl', b'<|endoftext|>', b'pl', b' sor', b' time', b' friend', b' I', b'\x87', b'ter', b' Spot', b'N', b'ith', b'S', b'st', b'ff', b't', b' lot', b'ite', b'ow', b' ch', b'ave', b'ard', b' run', b' We', b'g', b' of', b' but', b' best', b' always', b'\x1f', b' bad', b'\xa3', b' v', b' took', b' Lily', b'\xfc', b' fi', b'on', b'nna', b' saw', b' surprised', b'ut', b'\x19', b' Kitty', b'J', b' something', b'\xa8', b' flow', b'\x05', b' e', b' little', b'by', b' hig', b' walked', b'One', b' says', b'\x03', b' u', b' re', b'\xe2\x80', b'I', b' wanted', b'They', b'rm', b'al', b' kid', b'<', b'{', b'\x1b', b' away', b'>', b':', b' c', b' Anna', b'\xcc', b'ue', b' safe', b'ough', b' mag', b'\xa7', b' sm', b'[', b'\xdc', b' hel', b' br', b'\xa6', b' che', b'\xef', b'iny', b' hugged', b'ew', b',"', b'an', b'\xf6', b' door', b' my', b'ound', b' play', b'arden', b' ran', b'im', b' co', b' come', b'_', b' more', b' She', b'4', b'ec', b'itty', b' sw', b' hard', b'qu', b'\x95', b'nder', b'5', b' go', b'U', b'\x13', b've', b'\xb2', b'ood', b' op', b' cat', b' cl', b'Thank', b' ground', b' over', b' wh', b' out', b' up', b'\xbe', b' walk', b'ab', b'ous', b' thought', b' From', b' had', b'ver', b'nt', b' laughed', b' F', b' ca', b'\xaf', b'iz', b'dd', b' pr', b' know', b' decided', b' room', b'\xc2', b' Tim', b'ach', b'les', b' al', b'\xf9', b'aut', b'\x14', b'ber', b'as', b' in', b' some', b' look', b'ild', b' tree', b'ed', b' happily', b' stick', b'etter', b' want', b' she', b'ld', b' dog', b'\xae', b' home', b'pp', b' he', b'\x9d', b' there', b' nam', b'\xb0', b' never', b'ried', b'\xc6', b' ha', b'F', b'\xe1', b'ill', b'\x81', b'in', b'\xdb', b'But', b' see', b' lived', b' inside', b' Max', b'lew', b'iled', b'\xb9', b'\xd4', b' clo', b'ack', b'\x80', b'em', b' In', b'\x94', b'You', b' us', b'\x98', b' as', b' not', b' turn', b'ia', b' house', b'uck', b'udden', b'op', b' shiny', b' happened', b' get', b'ro', b' picked', b' A', b"'t", b'ent', b'!"', b' him', b' doll', b'ary', b'ess', b'are', b'ob', b'\xc0', b';', b' by', b' fast', b'nn', b'\x96', b'L', b' sh', b' toy', b' par', b' sorry', b'ss', b'ick', b' th', b' en', b' how', b' do', b']', b'\xd7', b' wor', b' sto', b'ate', b' tre', b'\xc5', b'ings', b' w', b' col', b'hing', b' exc', b'u', b' flew', b'c', b'b', b' share', b'ul', b' qu', b' rock', b'1', b'ally', b'out', b'pot', b'ump', b' special', b'le', b' H', b'ople', b' fam', b'e', b' played', b' family', b' animal', b'ame', b' bot', b'\x10', b' that', b' went', b' tow', b' strong', b'\x91', b'\xbb', b'\xa2', b'Once', b'.', b' mom', b'\x85', b'pected', b' blue', b'y', b'\xda', b' your', b' pretty', b'd', b'l', b'se', b'able', b' magic', b' boy', b'ge', b' ma', b'll', b'f', b'ust', b'ex', b' ide', b'uc', b'riend', b'ight', b' pl', b' D', b'}', b' what', b'\x1a', b' made', b'ought', b'Mom', b'ide', b' sur', b'w', b'\x92', b'Z', b'v', b'es', b' fish', b'o', b' One', b' them', b'ion', b' S', b'other', b'm', b' became', b' a', b' off', b' town', b' y', b'\xb4', b' forest', b'\xca', b'0', b'ft', b'xt', b' k', b'D', b' gre', b'ive', b'\x0e', b'ank', b' their', b' list', b'Lily', b' fa', b'\x18', b'very', b' even', b' L', b'ax', b'ak', b' try', b'O', b' boat', b' Lucy', b' day', b'ind', b'er', b' near', b'On', b' feel', b'eci', b' outside', b'uffy', b'\xb5', b' around', b'ful', b' "', b' you', b' loved', b'\x88', b'k', b'ap', b'omet', b'\xc9', b'\x8b', b' place', b' far', b' they', b' gr', b' j', b' other', b'side', b' bo', b' bro', b'\xde', b' find', b'!', b'`', b' then', b'\xe8', b'7', b' than', b' under', b' sun', b' knew', b'\xd2', b'\x06', b'G', b' Ben', b' unexpected', b' or', b'\xa4', b' found', b'one', b'ittle', b' ro', b' star', b'ag', b' com', b' l', b' told', b' end', b'&', b' next', b' cu', b'pec', b' liked', b'un', b'=', b' loo', b'is', b' small', b',', b' app', b'ing', b'il', b'\xfd', b' is', b'\xbc', b' se', b'\x17', b'\x08', b'\x12', b'ra', b' came', b'\xf3', b' opened', b'i', b'ged', b'ched', b'\xe3', b'\x8c', b' very', b'?"', b'\xc7', b'\xbf', b' un', b'\x1e', b"'m", b' can', b' now', b'ake', b'her', b' idea', b' this', b' bug', b' laug', b' girl', b' B', b'\xf5', b'\xe0', b' So', b' Tom', b'all', b'arn', b' anymore', b'W', b'n', b' great', b'\x99', b'ep', b'ke', b'\n\n', b' like', b' if', b'age', b'\x82', b'ch', b' sad', b'\xcf', b'\xad', b' jump', b' learn', b'\xba', b' clim', b'ers', b'og', b' m', b'\xce', b'own', b' Sara', b"'s", b'\xbd', b'ell', b' ke', b' all', b'\x9f', b' pe', b'ret', b' food', b'hen', b'oo', b' again', b' animals', b'bed', b'ture', b'ase', b'\xdd', b'ou', b'om', b' E', b'\x8a', b' garden', b'pped', b'use', b' ball', b' hug', b'ry', b'~', b'\xec', b' with', b' the', b' Bob', b' box', b'fe', b' J', b'ecial', b' back', b' bu', b' wat', b'urn', b' sn', b' still', b'\x07', b' better', b' could', b' let', b' fore', b' because', b'ened', b'ur', b' into', b' K', b' no', b' bear', b'and', b'el', b' any', b'uddenly', b' on', b' smile', b' eat', b' every', b' red', b'\x89', b'ir', b'\x9a', b'ish', b'\xe2', b'\x97', b'ised', b'\xf2', b'\x02', b'Let', b'#', b' was', b'\xd5', b'ara', b'\x8f', b' tr', b' from', b' showed', b' Her', b'ug', b' dec', b'it', b' gir', b' ', b'\xdf', b'q', b'2', b' d', b'\xa9', b'ore', b' happ', b'elt', b'\xd6', b'K', b'ily', b'ucy', b'r', b' careful', b' Amy', b' be', b' T'}
+  
+  Extra items in the left set:
+  b' rain'
+  b' nodded'
+  b' z'
+  b'oon'
+  b' game'
+  b'He'
+  b' C'
+  b' Let'
+  b' watch'
+  b' real'
+  b' pain'
+  b'vent'
+  b' kept'
+  b' wait'
+  b'raw'
+  b' soon'
+  b' de'
+  b' story'
+  b' noise'
+  b' has'
+  b' stopped'
+  b'rel'
+  b'irst'
+  b' brave'
+  b' fav'
+  b' open'
+  b'ger'
+  b'gan'
+  b' fin'
+  b'Ben'
+  b'ock'
+  b' cre'
+  b' rabbit'
+  b' store'
+  b'fore'
+  b' work'
+  b' speci'
+  b'iful'
+  b' cook'
+  b' unex'
+  b' yell'
+  b' thre'
+  b' hands'
+  b'so'
+  b'When'
+  b' sand'
+  b'illy'
+  b'oh'
+  b'th'
+  b' imp'
+  b' cry'
+  b'ud'
+  b' head'
+  b'What'
+  b'luffy'
+  b'ble'
+  b'It'
+  b'self'
+  b' Now'
+  b' flowers'
+  b'dded'
+  b' beautiful'
+  b' everyone'
+  b' fell'
+  b' gard'
+  b' tra'
+  b'be'
+  b' face'
+  b' being'
+  b' mean'
+  b' having'
+  b' Fluffy'
+  b' block'
+  b'abbit'
+  b' hear'
+  b' mommy'
+  b' also'
+  b' while'
+  b' couldn'
+  b'irrel'
+  b' tired'
+  b' ad'
+  b' where'
+  b' mon'
+  b'ane'
+  b' stay'
+  b'lease'
+  b' ate'
+  b'unny'
+  b' green'
+  b' okay'
+  b' clos'
+  b' leave'
+  b'pt'
+  b' pie'
+  b'ished'
+  b'That'
+  b'ohn'
+  b' wo'
+  b'\n\n\n'
+  b' picture'
+  b' sat'
+  b'Hi'
+  b' lost'
+  b' bre'
+  b' yummy'
+  b' slide'
+  b' keep'
+  b'ear'
+  b' Wh'
+  b' warm'
+  b' bra'
+  b'bit'
+  b' cou'
+  b' use'
+  b'ired'
+  b' called'
+  b' rem'
+  b' pa'
+  b' angry'
+  b' sing'
+  b'Look'
+  b' ey'
+  b'day'
+  b'iss'
+  b'owl'
+  b' two'
+  b' kids'
+  b' fix'
+  b' soft'
+  b' before'
+  b'ush'
+  Extra items in the right set:
+  b'\xe5'
+  b'\xc2'
+  b'\xb5'
+  b'\xb1'
+  b'\xf9'
+  b'\x9b'
+  b'\x88'
+  b'\xc9'
+  b'\xea'
+  b'\x8b'
+  b'\xc3'
+  b'\xe7'
+  b'\xe9'
+  b'\xde'
+  b'\xb8'
+  b'\xed'
+  b'\xd9'
+  b'expected'
+  b'\xe8'
+  b'\xff'
+  b'\xd2'
+  b'\xae'
+  b'\xcb'
+  b'\x9d'
+  b'\xb0'
+  b'\xa4'
+  b'\xaa'
+  b'\xe6'
+  b'\xc6'
+  b'\xe1'
+  b'\x81'
+  b'\x9c'
+  b'\xdb'
+  b'\xb3'
+  b'\xfd'
+  b'\xbc'
+  b'\xb9'
+  b'\x8e'
+  b'\xf0'
+  b'\xd4'
+  b'\x80'
+  b'\xf3'
+  b'\x94'
+  b'\x86'
+  b'\xd0'
+  b'\x83'
+  b'\x98'
+  b'\xe3'
+  b'\xcd'
+  b'\x8c'
+  b'\xa5'
+  b'\xc7'
+  b'\xe4'
+  b'\xbf'
+  b'\xc1'
+  b'\xb7'
+  b'\xc8'
+  b'\xfe'
+  b'\xf4'
+  b'\x84'
+  b'\x90'
+  b'\xf5'
+  b'\xe0'
+  b'\xf7'
+  b'\xc0'
+  b'\x96'
+  b'\x87'
+  b'\x93'
+  b'\xd7'
+  b'\x99'
+  b'\xc5'
+  b'\x82'
+  b'\xd1'
+  b'\xcf'
+  b'\xad'
+  b'\xba'
+  b'\xa1'
+  b'\xa3'
+  b'\xce'
+  b'\xbd'
+  b'\xfc'
+  b'\xb6'
+  b'\x9f'
+  b'\xeb'
+  b'\xd8'
+  b'\xa8'
+  b'\xf1'
+  b'\x91'
+  b'\xbb'
+  b'\xa2'
+  b'\x8a'
+  b'\xe2\x80'
+  b'\xdd'
+  b'\x85'
+  b'\xda'
+  b'\xcc'
+  b'\xec'
+  b'\xfb'
+  b'\xa7'
+  b'\xee'
+  b'ecial'
+  b'\xdc'
+  b'\xc4'
+  b'\xfa'
+  b'\xa6'
+  b'\x92'
+  b'\xef'
+  b'\xf6'
+  b'\x89'
+  b'\xd3'
+  b'\x9a'
+  b'\xa0'
+  b'arden'
+  b'\xe2'
+  b'\xac'
+  b'\x97'
+  b'\xf2'
+  b'\xb4'
+  b'\xf8'
+  b'\xca'
+  b'\x95'
+  b'\xd5'
+  b'\x8f'
+  b'\xb2'
+  b'\xdf'
+  b'\xa9'
+  b'\x8d'
+  b'\xab'
+  b'\xbe'
+  b'\xd6'
+  b'\x9e'
+  b'\xaf'
+  
+  Full diff:
+    {
+        b'\x00',
+        b'\x01',
+        b'\x02',
+        b'\x03',
+        b'\x04',
+        b'\x05',
+        b'\x06',
+        b'\x07',
+        b'\x08',
+        b'\t',
+        b'\n',
+        b'\n\n',
+  +     b'\n\n\n',
+        b'\x0b',
+        b'\x0c',
+        b'\r',
+        b'\x0e',
+        b'\x0f',
+        b'\x10',
+        b'\x11',
+        b'\x12',
+        b'\x13',
+        b'\x14',
+        b'\x15',
+        b'\x16',
+        b'\x17',
+        b'\x18',
+        b'\x19',
+        b'\x1a',
+        b'\x1b',
+        b'\x1c',
+        b'\x1d',
+        b'\x1e',
+        b'\x1f',
+        b' ',
+        b' "',
+        b' A',
+        b' Amy',
+        b' And',
+        b' Anna',
+        b' B',
+        b' Ben',
+        b' Bob',
+        b' But',
+  +     b' C',
+        b' D',
+        b' E',
+        b' Every',
+        b' F',
+  +     b' Fluffy',
+        b' From',
+        b' H',
+        b' He',
+        b' Her',
+        b' His',
+        b' I',
+        b' In',
+        b' It',
+        b' J',
+        b' K',
+        b' Kitty',
+        b' L',
+  +     b' Let',
+        b' Lily',
+        b' Lucy',
+        b' M',
+        b' Max',
+        b' Mia',
+        b' Mom',
+        b' N',
+  +     b' Now',
+        b' One',
+        b' P',
+        b' S',
+        b' Sally',
+        b' Sam',
+        b' Sara',
+        b' She',
+        b' So',
+        b' Spot',
+        b' Sue',
+        b' T',
+        b' Th',
+        b' The',
+        b' Then',
+        b' They',
+        b' Tim',
+        b' Tom',
+        b' W',
+        b' We',
+  +     b' Wh',
+        b' When',
+        b' You',
+        b' a',
+        b' ab',
+        b' about',
+  +     b' ad',
+        b' after',
+        b' ag',
+        b' again',
+        b' al',
+        b' all',
+  +     b' also',
+        b' always',
+        b' am',
+        b' an',
+        b' and',
+  +     b' angry',
+        b' animal',
+        b' animals',
+        b' any',
+        b' anymore',
+        b' app',
+        b' are',
+        b' around',
+        b' as',
+        b' asked',
+        b' at',
+  +     b' ate',
+        b' away',
+        b' b',
+        b' back',
+        b' bad',
+        b' ball',
+        b' be',
+        b' bear',
+        b' beaut',
+  +     b' beautiful',
+        b' bec',
+        b' became',
+        b' because',
+  +     b' before',
+  +     b' being',
+        b' best',
+        b' better',
+        b' big',
+        b' bird',
+        b' bl',
+  +     b' block',
+        b' blue',
+        b' bo',
+        b' boat',
+        b' book',
+        b' bot',
+        b' both',
+        b' box',
+        b' boy',
+        b' br',
+  +     b' bra',
+  +     b' brave',
+  +     b' bre',
+        b' bro',
+        b' bu',
+        b' bug',
+        b' but',
+        b' by',
+        b' c',
+        b' ca',
+        b' cake',
+        b' call',
+  +     b' called',
+        b' came',
+        b' can',
+        b' car',
+        b' care',
+        b' careful',
+        b' cat',
+        b' ch',
+        b' che',
+        b' cl',
+        b' cle',
+        b' clean',
+        b' clim',
+        b' clo',
+  +     b' clos',
+        b' co',
+        b' col',
+        b' color',
+        b' com',
+        b' come',
+  +     b' cook',
+  +     b' cou',
+        b' could',
+  +     b' couldn',
+  +     b' cre',
+  +     b' cry',
+        b' cu',
+        b' d',
+        b' dad',
+        b' dan',
+        b' day',
+  +     b' de',
+        b' dec',
+        b' decided',
+        b' did',
+        b' didn',
+        b' do',
+        b' dog',
+        b' doll',
+        b' don',
+        b' door',
+        b' down',
+        b' dre',
+        b' e',
+        b' each',
+        b' eat',
+        b' en',
+        b' end',
+        b' even',
+        b' ever',
+        b' every',
+  +     b' everyone',
+        b' ex',
+        b' exc',
+        b' excited',
+  +     b' ey',
+        b' f',
+        b' fa',
+  +     b' face',
+        b' fam',
+        b' family',
+        b' far',
+        b' fast',
+  +     b' fav',
+        b' fe',
+        b' feel',
+  +     b' fell',
+        b' felt',
+        b' fi',
+  +     b' fin',
+        b' find',
+        b' fish',
+  +     b' fix',
+        b' fl',
+        b' flew',
+        b' flow',
+  +     b' flowers',
+        b' fly',
+        b' fo',
+        b' food',
+        b' for',
+        b' fore',
+        b' forest',
+        b' found',
+        b' fr',
+        b' friend',
+        b' friends',
+        b' frog',
+        b' from',
+        b' fun',
+        b' g',
+  +     b' game',
+  +     b' gard',
+        b' garden',
+        b' gave',
+        b' get',
+        b' gir',
+        b' girl',
+        b' give',
+        b' gl',
+        b' go',
+        b' good',
+        b' got',
+        b' gr',
+        b' gra',
+        b' gre',
+        b' great',
+  +     b' green',
+        b' ground',
+        b' h',
+        b' ha',
+        b' had',
+        b' hand',
+  +     b' hands',
+        b' happ',
+        b' happened',
+        b' happily',
+        b' happy',
+        b' hard',
+  +     b' has',
+        b' hat',
+        b' have',
+  +     b' having',
+        b' he',
+  +     b' head',
+  +     b' hear',
+        b' heard',
+        b' hel',
+        b' help',
+        b' helped',
+        b' her',
+        b' hig',
+        b' high',
+        b' him',
+        b' his',
+        b' ho',
+        b' home',
+        b' house',
+        b' how',
+        b' hug',
+        b' hugged',
+        b' hurt',
+        b' ide',
+        b' idea',
+        b' if',
+        b' im',
+  +     b' imp',
+        b' in',
+        b' inside',
+        b' int',
+        b' into',
+        b' is',
+        b' it',
+        b' its',
+        b' j',
+        b' jump',
+        b' jumped',
+        b' just',
+        b' k',
+        b' ke',
+  +     b' keep',
+  +     b' kept',
+        b' kid',
+  +     b' kids',
+        b' kind',
+        b' kn',
+        b' knew',
+        b' know',
+        b' l',
+        b' la',
+        b' laug',
+        b' laughed',
+        b' le',
+        b' learn',
+        b' learned',
+  +     b' leave',
+        b' let',
+        b' li',
+        b' like',
+        b' liked',
+        b' list',
+        b' listen',
+        b' little',
+        b' lived',
+        b' lo',
+        b' long',
+        b' loo',
+        b' look',
+        b' looked',
+  +     b' lost',
+        b' lot',
+        b' lots',
+        b' loud',
+        b' love',
+        b' loved',
+        b' m',
+        b' ma',
+        b' made',
+        b' mag',
+        b' magic',
+        b' make',
+        b' man',
+        b' many',
+        b' me',
+  +     b' mean',
+        b' met',
+        b' mo',
+        b' mom',
+  +     b' mommy',
+  +     b' mon',
+        b' more',
+        b' much',
+        b' my',
+        b' n',
+        b' nam',
+        b' named',
+        b' ne',
+        b' near',
+        b' need',
+        b' never',
+        b' new',
+        b' next',
+        b' nice',
+        b' no',
+  +     b' nodded',
+  +     b' noise',
+        b' not',
+        b' now',
+        b' o',
+        b' of',
+        b' off',
+  +     b' okay',
+        b' old',
+        b' on',
+        b' one',
+        b' op',
+  +     b' open',
+        b' opened',
+        b' or',
+        b' other',
+        b' out',
+        b' outside',
+        b' over',
+        b' p',
+  +     b' pa',
+  +     b' pain',
+        b' par',
+        b' park',
+        b' pe',
+        b' people',
+        b' pic',
+        b' picked',
+  +     b' picture',
+  +     b' pie',
+        b' pl',
+        b' place',
+        b' play',
+        b' played',
+        b' playing',
+        b' po',
+        b' pr',
+        b' pret',
+        b' pretty',
+        b' proud',
+        b' put',
+        b' qu',
+        b' r',
+  +     b' rabbit',
+  +     b' rain',
+        b' ran',
+        b' re',
+  +     b' real',
+        b' red',
+  +     b' rem',
+        b' ro',
+        b' rock',
+        b' room',
+        b' run',
+        b' s',
+        b' sa',
+        b' sad',
+        b' safe',
+        b' said',
+  +     b' sand',
+  +     b' sat',
+        b' saw',
+        b' say',
+        b' says',
+        b' sc',
+        b' scared',
+        b' se',
+        b' see',
+        b' sh',
+        b' share',
+        b' she',
+        b' shiny',
+        b' should',
+        b' show',
+        b' showed',
+  +     b' sing',
+        b' sk',
+        b' sky',
+        b' sl',
+  +     b' slide',
+        b' sm',
+        b' small',
+        b' smile',
+        b' smiled',
+        b' sn',
+        b' so',
+  +     b' soft',
+        b' some',
+        b' somet',
+        b' something',
+  +     b' soon',
+        b' sor',
+        b' sorry',
+        b' sp',
+  +     b' speci',
+        b' special',
+        b' squ',
+        b' st',
+        b' star',
+        b' started',
+  +     b' stay',
+        b' stick',
+        b' still',
+        b' sto',
+  +     b' stopped',
+        b' stor',
+  +     b' store',
+  +     b' story',
+        b' str',
+        b' strong',
+        b' sun',
+        b' sur',
+        b' surpr',
+        b' surprised',
+        b' sw',
+        b' t',
+        b' ta',
+        b' take',
+        b' tal',
+        b' te',
+        b' th',
+        b' than',
+        b' thanked',
+        b' that',
+        b' the',
+        b' their',
+        b' them',
+        b' then',
+        b' there',
+        b' they',
+        b' things',
+        b' this',
+        b' thought',
+  +     b' thre',
+        b' time',
+  +     b' tired',
+        b' to',
+        b' together',
+        b' told',
+        b' too',
+        b' took',
+        b' tow',
+        b' town',
+        b' toy',
+        b' toys',
+        b' tr',
+  +     b' tra',
+        b' tre',
+        b' tree',
+        b' tried',
+        b' try',
+        b' turn',
+        b' tw',
+  +     b' two',
+        b' u',
+        b' un',
+        b' under',
+  +     b' unex',
+        b' unexpected',
+        b' unt',
+        b' until',
+        b' up',
+        b' upon',
+        b' us',
+  +     b' use',
+        b' v',
+        b' very',
+        b' w',
+        b' wa',
+  +     b' wait',
+        b' wal',
+        b' walk',
+        b' walked',
+        b' want',
+        b' wanted',
+  +     b' warm',
+        b' was',
+        b' wat',
+  +     b' watch',
+        b' water',
+        b' way',
+        b' we',
+        b' went',
+        b' were',
+        b' wh',
+        b' what',
+        b' when',
+  +     b' where',
+  +     b' while',
+        b' who',
+        b' will',
+        b' wind',
+        b' with',
+  +     b' wo',
+        b' wor',
+  +     b' work',
+        b' would',
+        b' y',
+  +     b' yell',
+        b' you',
+        b' your',
+  +     b' yummy',
+  +     b' z',
+        b'!',
+        b'!"',
+        b'"',
+        b'#',
+        b'$',
+        b'%',
+        b'&',
+        b"'",
+        b"'m",
+        b"'s",
+        b"'t",
+        b'(',
+        b')',
+        b'*',
+        b'+',
+        b',',
+        b',"',
+        b'-',
+        b'.',
+        b'."',
+        b'/',
+        b'0',
+        b'1',
+        b'2',
+        b'3',
+        b'4',
+        b'5',
+        b'6',
+        b'7',
+        b'8',
+        b'9',
+        b':',
+        b';',
+        b'<',
+        b'<|endoftext|>',
+        b'=',
+        b'>',
+        b'?',
+        b'?"',
+        b'@',
+        b'A',
+        b'As',
+        b'B',
+  +     b'Ben',
+        b'But',
+        b'C',
+        b'Can',
+        b'D',
+        b'E',
+        b'F',
+        b'G',
+        b'H',
+  +     b'He',
+  +     b'Hi',
+        b'I',
+  +     b'It',
+        b'J',
+        b'K',
+        b'L',
+        b'Let',
+        b'Lily',
+  +     b'Look',
+        b'M',
+        b'Mom',
+        b'N',
+        b'No',
+        b'O',
+        b'On',
+        b'Once',
+        b'One',
+        b'P',
+        b'Q',
+        b'R',
+        b'S',
+        b'T',
+        b'Th',
+        b'Thank',
+  +     b'That',
+        b'The',
+        b'They',
+        b'Tim',
+        b'Tom',
+        b'U',
+        b'V',
+        b'W',
+        b'Wh',
+  +     b'What',
+  +     b'When',
+        b'X',
+        b'Y',
+        b'Yes',
+        b'You',
+        b'Z',
+        b'[',
+        b'\\',
+        b']',
+        b'^',
+        b'_',
+        b'`',
+        b'a',
+        b'ab',
+  +     b'abbit',
+        b'able',
+        b'ace',
+        b'ach',
+        b'ack',
+        b'ad',
+        b'ade',
+        b'ady',
+        b'ag',
+        b'age',
+        b'ain',
+        b'ak',
+        b'ake',
+        b'al',
+        b'all',
+        b'ally',
+        b'am',
+        b'ame',
+        b'an',
+        b'and',
+  +     b'ane',
+        b'ank',
+        b'ant',
+        b'ap',
+        b'ar',
+        b'ara',
+        b'ard',
+  -     b'arden',
+        b'are',
+        b'ared',
+        b'ark',
+        b'arn',
+        b'ary',
+        b'as',
+        b'ase',
+        b'at',
+        b'ate',
+        b'ause',
+        b'aut',
+        b'ave',
+        b'ax',
+        b'ay',
+        b'b',
+  +     b'be',
+        b'bed',
+        b'ber',
+  +     b'bit',
+  +     b'ble',
+        b'by',
+        b'c',
+        b'ce',
+        b'ch',
+        b'ched',
+        b'ck',
+        b'ct',
+        b'd',
+  +     b'day',
+        b'dd',
+  +     b'dded',
+        b'dy',
+        b'e',
+  +     b'ear',
+        b'ec',
+        b'eci',
+  -     b'ecial',
+        b'ed',
+        b'el',
+        b'ell',
+        b'elt',
+        b'em',
+        b'en',
+        b'end',
+        b'ened',
+        b'ent',
+        b'ep',
+        b'er',
+        b'ers',
+        b'es',
+        b'ess',
+        b'et',
+        b'etter',
+        b'ew',
+        b'ex',
+  -     b'expected',
+        b'f',
+        b'fe',
+        b'ff',
+  +     b'fore',
+        b'ft',
+        b'fter',
+        b'ful',
+        b'g',
+  +     b'gan',
+        b'ge',
+        b'ged',
+  +     b'ger',
+        b'get',
+        b'gether',
+        b'gry',
+        b'h',
+        b'he',
+        b'hed',
+        b'hen',
+        b'her',
+        b'here',
+        b'hes',
+        b'hing',
+        b'ht',
+        b'i',
+        b'ia',
+        b'ic',
+        b'ice',
+        b'ick',
+        b'id',
+        b'ide',
+        b'ided',
+        b'ie',
+        b'ies',
+        b'if',
+  +     b'iful',
+        b'ig',
+        b'ight',
+        b'il',
+        b'ild',
+        b'ile',
+        b'iled',
+        b'ill',
+  +     b'illy',
+        b'ily',
+        b'im',
+        b'imal',
+        b'ime',
+        b'in',
+        b'ind',
+        b'ine',
+        b'ing',
+        b'ings',
+        b'ink',
+        b'iny',
+        b'ion',
+        b'ip',
+        b'ir',
+        b'ird',
+  +     b'ired',
+  +     b'irrel',
+  +     b'irst',
+        b'is',
+        b'ise',
+        b'ised',
+        b'ish',
+  +     b'ished',
+  +     b'iss',
+        b'ist',
+        b'it',
+        b'ite',
+        b'ited',
+        b'ith',
+        b'itt',
+        b'ittle',
+        b'itty',
+        b'ive',
+        b'iz',
+        b'j',
+        b'k',
+        b'kay',
+        b'ke',
+        b'ked',
+        b'king',
+        b'l',
+        b'ld',
+        b'le',
+  +     b'lease',
+        b'les',
+        b'lew',
+        b'lf',
+        b'll',
+  +     b'luffy',
+        b'ly',
+        b'm',
+        b'more',
+        b'my',
+        b'n',
+        b'nd',
+        b'nder',
+        b'nn',
+        b'nna',
+        b'nt',
+        b'ny',
+        b'o',
+        b'ob',
+  +     b'ock',
+        b'og',
+  +     b'oh',
+  +     b'ohn',
+        b'om',
+        b'ome',
+        b'omet',
+        b'on',
+        b'one',
+        b'ong',
+        b'oo',
+        b'ood',
+        b'ook',
+        b'ool',
+  +     b'oon',
+        b'op',
+        b'ople',
+        b'or',
+        b'ore',
+        b'orn',
+        b'ort',
+        b'ot',
+        b'other',
+        b'ou',
+        b'oud',
+        b'oug',
+        b'ough',
+        b'ought',
+        b'ould',
+        b'ound',
+        b'our',
+        b'ous',
+        b'ouse',
+        b'out',
+        b'ow',
+  +     b'owl',
+        b'own',
+        b'oy',
+        b'p',
+        b'pec',
+        b'pected',
+        b'pl',
+        b'pot',
+        b'pp',
+        b'pped',
+        b'pr',
+  +     b'pt',
+        b'q',
+        b'qu',
+        b'r',
+        b'ra',
+  +     b'raw',
+        b're',
+  +     b'rel',
+        b'ret',
+        b'ri',
+        b'ried',
+        b'riend',
+        b'rm',
+        b'ro',
+        b'rom',
+        b'round',
+        b'ry',
+        b's',
+        b'se',
+  +     b'self',
+        b'side',
+  +     b'so',
+        b'ss',
+        b'st',
+        b't',
+        b'ted',
+        b'ter',
+  +     b'th',
+        b'ture',
+        b'ty',
+        b'u',
+        b'uc',
+        b'uch',
+        b'uck',
+        b'ucy',
+  +     b'ud',
+        b'udd',
+        b'udden',
+        b'uddenly',
+        b'ue',
+        b'uff',
+        b'uffy',
+        b'ug',
+        b'ul',
+        b'ull',
+        b'um',
+        b'ummy',
+        b'ump',
+        b'un',
+  +     b'unny',
+        b'ur',
+        b'ure',
+        b'urn',
+        b'urt',
+        b'us',
+        b'use',
+  +     b'ush',
+        b'ust',
+        b'ut',
+        b'v',
+        b've',
+        b'ved',
+        b'ven',
+  +     b'vent',
+        b'ver',
+        b'very',
+        b'ving',
+        b'w',
+        b'way',
+        b'ways',
+        b'x',
+        b'xt',
+        b'y',
+        b'z',
+        b'{',
+        b'|',
+        b'}',
+        b'~',
+        b'\x7f',
+  -     b'\x80',
+  -     b'\x81',
+  -     b'\x82',
+  -     b'\x83',
+  -     b'\x84',
+  -     b'\x85',
+  -     b'\x86',
+  -     b'\x87',
+  -     b'\x88',
+  -     b'\x89',
+  -     b'\x8a',
+  -     b'\x8b',
+  -     b'\x8c',
+  -     b'\x8d',
+  -     b'\x8e',
+  -     b'\x8f',
+  -     b'\x90',
+  -     b'\x91',
+  -     b'\x92',
+  -     b'\x93',
+  -     b'\x94',
+  -     b'\x95',
+  -     b'\x96',
+  -     b'\x97',
+  -     b'\x98',
+  -     b'\x99',
+  -     b'\x9a',
+  -     b'\x9b',
+  -     b'\x9c',
+  -     b'\x9d',
+  -     b'\x9e',
+  -     b'\x9f',
+  -     b'\xa0',
+  -     b'\xa1',
+  -     b'\xa2',
+  -     b'\xa3',
+  -     b'\xa4',
+  -     b'\xa5',
+  -     b'\xa6',
+  -     b'\xa7',
+  -     b'\xa8',
+  -     b'\xa9',
+  -     b'\xaa',
+  -     b'\xab',
+  -     b'\xac',
+  -     b'\xad',
+  -     b'\xae',
+  -     b'\xaf',
+  -     b'\xb0',
+  -     b'\xb1',
+  -     b'\xb2',
+  -     b'\xb3',
+  -     b'\xb4',
+  -     b'\xb5',
+  -     b'\xb6',
+  -     b'\xb7',
+  -     b'\xb8',
+  -     b'\xb9',
+  -     b'\xba',
+  -     b'\xbb',
+  -     b'\xbc',
+  -     b'\xbd',
+  -     b'\xbe',
+  -     b'\xbf',
+  -     b'\xc0',
+  -     b'\xc1',
+  -     b'\xc2',
+  -     b'\xc3',
+  -     b'\xc4',
+  -     b'\xc5',
+  -     b'\xc6',
+  -     b'\xc7',
+  -     b'\xc8',
+  -     b'\xc9',
+  -     b'\xca',
+  -     b'\xcb',
+  -     b'\xcc',
+  -     b'\xcd',
+  -     b'\xce',
+  -     b'\xcf',
+  -     b'\xd0',
+  -     b'\xd1',
+  -     b'\xd2',
+  -     b'\xd3',
+  -     b'\xd4',
+  -     b'\xd5',
+  -     b'\xd6',
+  -     b'\xd7',
+  -     b'\xd8',
+  -     b'\xd9',
+  -     b'\xda',
+  -     b'\xdb',
+  -     b'\xdc',
+  -     b'\xdd',
+  -     b'\xde',
+  -     b'\xdf',
+  -     b'\xe0',
+  -     b'\xe1',
+  -     b'\xe2',
+  -     b'\xe2\x80',
+  -     b'\xe3',
+  -     b'\xe4',
+  -     b'\xe5',
+  -     b'\xe6',
+  -     b'\xe7',
+  -     b'\xe8',
+  -     b'\xe9',
+  -     b'\xea',
+  -     b'\xeb',
+  -     b'\xec',
+  -     b'\xed',
+  -     b'\xee',
+  -     b'\xef',
+  -     b'\xf0',
+  -     b'\xf1',
+  -     b'\xf2',
+  -     b'\xf3',
+  -     b'\xf4',
+  -     b'\xf5',
+  -     b'\xf6',
+  -     b'\xf7',
+  -     b'\xf8',
+  -     b'\xf9',
+  -     b'\xfa',
+  -     b'\xfb',
+  -     b'\xfc',
+  -     b'\xfd',
+  -     b'\xfe',
+  -     b'\xff',
+    }
+========================= 2 failed, 1 passed in 1.43s ==========================
